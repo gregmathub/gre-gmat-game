@@ -1,0 +1,39 @@
+{
+  "rules": {
+    "players": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "gamePlayers": {
+      "$room": {
+        ".read": "auth != null",
+        "$emailKey": {
+          ".write": "auth != null",
+          ".validate": "!newData.exists() || newData.child('email').val() === auth.token.email"
+        }
+      }
+    },
+
+    "leaderboard": {
+      "global": {
+        ".read": "auth != null",
+        "$emailKey": {
+          ".write": "auth != null",
+          ".validate": "newData.child('email').val() === auth.token.email"
+        }
+      },
+      "class": {
+        "$classCode": {
+          ".read": "auth != null",
+          "$emailKey": {
+            ".write": "auth != null",
+            ".validate": "newData.child('email').val() === auth.token.email"
+          }
+        }
+      }
+    }
+  }
+}

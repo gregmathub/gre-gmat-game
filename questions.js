@@ -1,0 +1,23 @@
+// Shared question bank for Formula Sprint. Loaded as a plain script → window.SPRINT_QUESTIONS
+window.SPRINT_QUESTIONS = [
+  { formula:"% \u0394 = (new \u2212 old) / old \u00d7 100", stem:"A stock priced at $80 rises to $92 over one quarter. By what percent did the price increase?", options:["12%","15%","17.5%","20%","150%"], answer:1, tags:["Percent"] },
+  { formula:"sum of roots = \u2212b / a", stem:"If x\u00b2 \u2212 7x + 12 = 0, what is the sum of the two roots?", options:["3","4","7","12","\u22127"], answer:2, tags:["Algebra"] },
+  { formula:"C = 2\u03c0r ,  A = \u03c0r\u00b2", stem:"A circle has a circumference of 16\u03c0. What is the area of the circle?", options:["8\u03c0","16\u03c0","32\u03c0","64\u03c0","256\u03c0"], answer:3, tags:["Geometry"] },
+  { formula:"average = sum / count", stem:"The average of five numbers is 18. A sixth number, 30, is added. What is the new average?", options:["18","19","20","21","24"], answer:2, tags:["Statistics"] },
+  { formula:"part = (share / total) \u00d7 whole", stem:"The ratio of boys to girls is 3 : 5. If there are 40 students, how many are girls?", options:["15","20","24","25","30"], answer:3, tags:["Ratios"] },
+  { formula:"1/T = 1/a + 1/b", stem:"Machine A finishes a job in 6 hours, Machine B in 3 hours. Working together, how long?", options:["1.5 hr","2 hr","2.5 hr","3 hr","4.5 hr"], answer:1, tags:["Work"] },
+  { formula:"d = r \u00d7 t", stem:"A car travels 240 miles in 4 hours. At the same rate, how far in 7 hours?", options:["360 mi","400 mi","420 mi","480 mi","600 mi"], answer:2, tags:["Rates"] },
+  { formula:"a\u1d50\u207a\u207f = a\u1d50 \u00b7 a\u207f", stem:"If 2\u02e3 = 32, what is the value of 2\u207d\u02e3\u207a\u00b2\u207e?", options:["34","64","128","256","512"], answer:2, tags:["Exponents"] },
+  { formula:"a\u00b2 + b\u00b2 = c\u00b2", stem:"A right triangle has legs 9 and 12. What is the hypotenuse?", options:["13","14","15","18","21"], answer:2, tags:["Geometry"] },
+  { formula:"profit % = (SP \u2212 CP) / CP \u00d7 100", stem:"An item bought for $50 is sold for $65. What is the percent profit on cost?", options:["15%","23%","30%","35%","65%"], answer:2, tags:["Percent"] },
+  { formula:"a\u2099 = a\u2081 + (n \u2212 1)d", stem:"An arithmetic sequence has first term 4 and common difference 6. What is the 10th term?", options:["54","58","60","64","94"], answer:1, tags:["Sequences"] },
+  { formula:"I = P \u00d7 r \u00d7 t", stem:"Find the simple interest on $1,200 at 5% per year for 3 years.", options:["$60","$180","$200","$360","$1,380"], answer:1, tags:["Interest"] },
+  { formula:"weighted avg = \u03a3(w\u1d62x\u1d62) / \u03a3w\u1d62", stem:"Class A: 20 students avg 75. Class B: 30 students avg 85. Combined average of all 50?", options:["79","80","81","82","83"], answer:2, tags:["Statistics"] },
+  { formula:"d = \u221a[(\u0394x)\u00b2 + (\u0394y)\u00b2]", stem:"What is the distance between the points (1, 2) and (4, 6)?", options:["3","4","5","7","25"], answer:2, tags:["Coordinate"] },
+  { formula:"|A\u222aB| = |A| + |B| \u2212 |A\u2229B|", stem:"Of 50 people, 30 like tea, 25 like coffee, 10 like both. How many like neither?", options:["0","5","10","15","20"], answer:1, tags:["Sets"] },
+  { formula:"A = P(1 + r)\u1d57", stem:"$2,000 invested at 10% compounded yearly for 2 years. Final amount?", options:["$2,200","$2,400","$2,410","$2,420","$2,440"], answer:3, tags:["Interest"] },
+  { formula:"\u2099C\u1d63 = n! / [r!(n\u2212r)!]", stem:"In how many ways can a committee of 3 be chosen from 8 people?", options:["24","28","56","112","336"], answer:2, tags:["Combinatorics"] },
+  { formula:"P = favorable / total", stem:"A bag has 4 red and 6 blue marbles. Drawing two without replacement, P(both red)?", options:["1/6","2/15","4/25","2/5","1/2"], answer:1, tags:["Probability"] },
+  { formula:"units digit of 3\u207f cycles 3,9,7,1", stem:"What is the remainder when 3\u00b2\u2070 is divided by 5?", options:["0","1","2","3","4"], answer:1, tags:["Number Prop."] },
+  { formula:"acid conserved: c\u2081V\u2081 = c\u2082V\u2082", stem:"How many liters of water must be added to 10 L of 40% acid to dilute it to 25%?", options:["4 L","5 L","6 L","7.5 L","15 L"], answer:2, tags:["Mixtures"] },
+];

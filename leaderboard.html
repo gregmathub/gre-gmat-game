@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard · FreeStudy Hub — Formula Sprint</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+:root{--navy:#0B1F3A;--navy-mid:#1A3558;--blue:#1D4ED8;--teal:#2DD4BF;--teal-d:#0D9488;--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--bg:#F1F5F9;--off:#F7F9FC;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.topbar{height:58px;background:var(--navy);border-bottom:3px solid var(--teal);display:flex;align-items:center;justify-content:space-between;padding:0 22px;}
+.brandrow{display:flex;align-items:center;gap:11px;}
+.kick{font-weight:800;font-size:14px;letter-spacing:.5px;color:#fff;}
+.kick-sub{font-size:9px;letter-spacing:2px;color:var(--teal);text-transform:uppercase;}
+.nav a,.nav button{font:inherit;font-size:13px;font-weight:600;color:#B9C9DE;background:none;border:none;padding:7px 12px;border-radius:8px;cursor:pointer;text-decoration:none;}
+.nav a:hover{color:#fff;background:rgba(255,255,255,.08);}
+.so{border:1.5px solid rgba(255,255,255,.22)!important;color:#fff!important;}
+.container{max-width:640px;margin:0 auto;padding:32px 22px 60px;}
+.center{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--muted);}
+.spinner{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--teal-d);border-radius:50%;animation:spin .7s linear infinite;}
+.seg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:3px;}
+.seg button{font:inherit;font-size:13px;font-weight:600;padding:8px 18px;border:none;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;}
+.seg button.on{background:var(--navy);color:#fff;}
+.serif{font-family:'Source Serif 4',serif;}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(11,31,58,.04);}
+.hidden{display:none!important;}
+.leaffoot{background:var(--navy);text-align:center;padding:24px 16px 28px;margin-top:34px;}
+.leaffoot .fn{font-weight:800;font-size:15px;letter-spacing:2px;color:#fff;text-transform:uppercase;}
+.leaffoot .ft{font-size:9px;letter-spacing:2.5px;color:var(--teal);text-transform:uppercase;margin:3px 0 0;}
+.leaffoot .cr{font-size:10.5px;color:#4A6080;line-height:1.7;margin-top:12px;}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><g id="leaf"><circle cx="19" cy="6" r="5.5" fill="#2DD4BF"/><path d="M12,14 Q19,10 26,14 L24,23 L14,23 Z" fill="#2DD4BF"/><path d="M7,21 Q13,17 19,21 L19,32 Q13,30 7,32 Z" fill="#2DD4BF"/><path d="M19,21 Q25,17 31,21 L31,32 Q25,30 19,32 Z" fill="#2DD4BF"/></g></defs></svg>
+
+<div class="topbar">
+  <div class="brandrow">
+    <svg viewBox="0 0 38 44" width="24" height="28"><use href="#leaf"/></svg>
+    <div><div class="kick">FreeStudy Hub</div><div class="kick-sub">Formula Sprint</div></div>
+  </div>
+  <div class="nav"><a href="game.html">← Back to game</a><button class="so" onclick="SprintAuth.signOut().then(function(){location.href='index.html';})">Sign out</button></div>
+</div>
+
+<div id="loading" class="center"><div class="spinner"></div></div>
+<div id="app" class="hidden">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
+      <h1 class="serif" style="font-size:28px;font-weight:600;color:var(--navy);">Leaderboard</h1>
+      <div class="seg"><button id="tGlobal" class="on" onclick="setTab('global')">Global</button><button id="tClass" onclick="setTab('class')">My class</button></div>
+    </div>
+    <div class="card" style="padding:12px;"><div id="rows"></div></div>
+  </div>
+  <footer class="leaffoot">
+    <svg viewBox="0 0 38 44" width="30" height="35" style="margin-bottom:6px;"><use href="#leaf"/></svg>
+    <div class="fn">FreeStudy Hub</div><div class="ft">Learn Free. Go Further.</div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:16px 0 4px;">
+      <a href="https://wa.me/2348032710570" target="_blank" style="display:flex;align-items:center;gap:7px;color:#25D366;text-decoration:none;font-size:12px;font-weight:500;"><span style="background:#1A3558;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;">💬</span>+234 803 271 0570</a>
+      <a href="https://freestudyhub.store" target="_blank" style="display:flex;align-items:center;gap:7px;color:#2DD4BF;text-decoration:none;font-size:12px;font-weight:500;"><span style="background:#1A3558;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;">🌐</span>freestudyhub.store</a>
+      <a href="https://youtube.com/@LeonardNwosu-k8z" target="_blank" style="display:flex;align-items:center;gap:7px;color:#FC4444;text-decoration:none;font-size:12px;font-weight:500;"><span style="background:#1A3558;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;">▶</span>youtube.com/@LeonardNwosu-k8z</a>
+    </div>
+    <div class="cr">Prepared by <span style="color:#7A96BC;font-weight:600;">Leonard Nwosu</span> · Free Study Hub<br>© 2026 Free Study Hub. All Rights Reserved.</div>
+  </footer>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="sprint-auth.js"></script>
+<script src="sprint-game.js"></script>
+<script>
+var PROF=null,myEk="",TAB="global",GLOBAL=[],CLASS=[];
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function initials(n){var p=String(n||"?").trim().split(/\s+/);return((p[0]||"")[0]||"")+((p[1]||"")[0]||"");}
+function avColor(s){var h=0;s=String(s||"");for(var i=0;i<s.length;i++)h=s.charCodeAt(i)+((h<<5)-h);var c=["#0D9488","#1D4ED8","#7C3AED","#D97706","#DB2777","#0891B2"];return c[Math.abs(h)%c.length];}
+
+SprintAuth.gate().then(async function(ctx){
+  PROF=ctx.profile||{}; myEk=SprintGame.emailKey(PROF.email||ctx.user.email);
+  document.getElementById("loading").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  if(!PROF.classCode){document.getElementById("tClass").style.display="none";}
+  GLOBAL=await SprintGame.globalLeaderboard(100);
+  CLASS=PROF.classCode?await SprintGame.classLeaderboard(PROF.classCode,100):[];
+  render();
+});
+
+function setTab(t){TAB=t;document.getElementById("tGlobal").classList.toggle("on",t==="global");document.getElementById("tClass").classList.toggle("on",t==="class");render();}
+
+function render(){
+  var rows=TAB==="global"?GLOBAL:CLASS;
+  var box=document.getElementById("rows");
+  if(!rows.length){box.innerHTML='<div style="padding:40px 20px;text-align:center;color:var(--muted);font-size:14px;">No scores yet — be the first to sprint!</div>';return;}
+  var rc={0:"#D97706",1:"#94A3B8",2:"#B45309"};
+  box.innerHTML=(TAB==="class"?'<div style="padding:4px 10px 12px;font-size:12px;color:var(--muted);">Class <b style="color:var(--teal-d);">'+esc(PROF.classCode)+'</b></div>':'')+
+    rows.map(function(p,i){
+      var you=p.emailKey===myEk;
+      return '<div style="display:flex;align-items:center;gap:12px;padding:11px;border-radius:11px;'+(you?"background:#EFF6FF;border:1px solid #BFDBFE;":"border:1px solid transparent;")+'">'+
+        '<div style="width:28px;text-align:center;font-weight:700;font-size:15px;color:'+(rc[i]||"var(--muted)")+';">'+(i+1)+'</div>'+
+        '<div style="width:36px;height:36px;border-radius:10px;background:'+avColor(p.name)+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;">'+esc(initials(p.name))+'</div>'+
+        '<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:15px;color:'+(you?"var(--blue)":"var(--ink)")+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(p.name)+(you?" (you)":"")+'</div>'+
+          '<div style="font-size:12px;color:var(--muted);">'+esc(p.title||SprintGame.titleForScore(p.bestScore||0))+' · '+(p.plays||1)+' play'+((p.plays||1)===1?"":"s")+'</div></div>'+
+        '<div style="font-weight:800;font-size:18px;color:var(--navy);">'+(p.bestScore||0)+'</div></div>';
+    }).join("");
+}
+window.setTab=setTab;
+</script>
+</body>
+</html>

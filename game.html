@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formula Sprint · FreeStudy Hub</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+:root{--navy:#0B1F3A;--navy-mid:#1A3558;--blue:#1D4ED8;--blue-h:#1E40AF;--teal:#2DD4BF;--teal-d:#0D9488;--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--bg:#F1F5F9;--off:#F7F9FC;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes rise{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes floatUp{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-46px);opacity:0}}
+@keyframes confetti{0%{transform:translateY(-30px) rotate(0);opacity:0}12%{opacity:1}100%{transform:translateY(560px) rotate(540deg);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.topbar{height:58px;background:var(--navy);border-bottom:3px solid var(--teal);display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:50;}
+.brandrow{display:flex;align-items:center;gap:11px;}
+.kick{font-weight:800;font-size:14px;letter-spacing:.5px;color:#fff;}
+.kick-sub{font-size:9px;letter-spacing:2px;color:var(--teal);text-transform:uppercase;}
+.nav{display:flex;align-items:center;gap:8px;}
+.nav a{font:inherit;font-size:13px;font-weight:600;color:#B9C9DE;text-decoration:none;padding:7px 12px;border-radius:8px;}
+.nav a:hover{color:#fff;background:rgba(255,255,255,.08);}
+.who{font-size:13px;color:#B9C9DE;font-weight:600;}
+.so{height:34px;padding:0 13px;border-radius:8px;border:1.5px solid rgba(255,255,255,.22);background:transparent;color:#fff;font:inherit;font-size:13px;font-weight:600;cursor:pointer;}
+.container{max-width:1120px;margin:0 auto;padding:26px 22px;}
+.center{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted);}
+.spinner{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--teal-d);border-radius:50%;animation:spin .7s linear infinite;}
+.hidden{display:none!important;}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(11,31,58,.04);}
+.btn{font:inherit;font-weight:700;border:none;border-radius:10px;cursor:pointer;letter-spacing:.02em;}
+.btn-p{background:linear-gradient(135deg,var(--teal-d),var(--blue));color:#fff;box-shadow:0 6px 18px rgba(13,148,136,.26);}
+.btn-p:hover{opacity:.94;}
+.btn-s{background:var(--off);border:1.5px solid var(--line);color:var(--ink);}
+.btn-s:hover{background:var(--line);}
+.lab{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);}
+.serif{font-family:'Source Serif 4',serif;}
+.seg{display:inline-flex;background:var(--off);border:1.5px solid var(--line);border-radius:9px;padding:3px;}
+.seg button{font:inherit;font-size:12px;font-weight:600;padding:6px 14px;border:none;border-radius:7px;background:transparent;color:var(--muted);cursor:pointer;}
+.seg button.on{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(11,31,58,.12);}
+.leaffoot{background:var(--navy);text-align:center;padding:26px 16px 30px;margin-top:38px;}
+.leaffoot .fn{font-family:'DM Sans';font-weight:800;font-size:16px;letter-spacing:2px;color:#fff;text-transform:uppercase;}
+.leaffoot .ft{font-size:9px;letter-spacing:2.5px;color:var(--teal);text-transform:uppercase;margin:3px 0 10px;}
+.leaffoot .cr{font-size:10.5px;color:#4A6080;line-height:1.7;margin-top:12px;}
+.leaffoot a.cta{display:inline-block;background:linear-gradient(135deg,var(--teal-d),var(--blue));color:#fff;font-weight:700;font-size:12px;letter-spacing:1px;padding:9px 26px;border-radius:22px;text-decoration:none;text-transform:uppercase;box-shadow:0 4px 16px rgba(13,148,136,.35);}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><g id="leaf"><circle cx="19" cy="6" r="5.5" fill="#2DD4BF"/><path d="M12,14 Q19,10 26,14 L24,23 L14,23 Z" fill="#2DD4BF"/><path d="M7,21 Q13,17 19,21 L19,32 Q13,30 7,32 Z" fill="#2DD4BF"/><path d="M19,21 Q25,17 31,21 L31,32 Q25,30 19,32 Z" fill="#2DD4BF"/></g></defs></svg>
+
+<div class="topbar">
+  <div class="brandrow">
+    <svg viewBox="0 0 38 44" width="24" height="28"><use href="#leaf"/></svg>
+    <div><div class="kick">FreeStudy Hub</div><div class="kick-sub">Formula Sprint</div></div>
+  </div>
+  <div class="nav">
+    <a href="leaderboard.html">Leaderboard</a>
+    <span class="who" id="who"></span>
+    <button class="so" onclick="SprintAuth.signOut().then(function(){location.href='index.html';})">Sign out</button>
+  </div>
+</div>
+
+<div id="loading" class="center"><div class="spinner"></div><div>Loading Formula Sprint…</div></div>
+<div id="app" class="hidden"><div class="container" id="view"></div><div id="footSlot"></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="sprint-auth.js"></script>
+<script src="sprint-game.js"></script>
+<script src="questions.js"></script>
+<script>
+var ROOM="open";
+var Q=window.SPRINT_QUESTIONS||[];
+var LETTERS=["A","B","C","D","E"];
+var ME=null,PROF=null,myEk="";
+var G=null,unsub=null,advTimer=null;
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function initials(n){var p=String(n||"?").trim().split(/\s+/);return((p[0]||"")[0]||"")+((p[1]||"")[0]||"");}
+function avColor(s){var h=0;s=String(s||"");for(var i=0;i<s.length;i++)h=s.charCodeAt(i)+((h<<5)-h);var c=["#0D9488","#1D4ED8","#7C3AED","#D97706","#DB2777","#0891B2"];return c[Math.abs(h)%c.length];}
+function fmtMult(m){return Number.isInteger(m)?String(m):m.toFixed(1);}
+function multForStreak(s){return Math.min(1+Math.max(0,s-1)*0.5,3);}
+
+var CONTACTS='<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:16px 0 4px;">'+
+  '<a href="https://wa.me/2348032710570" target="_blank" style="display:flex;align-items:center;gap:7px;color:#25D366;text-decoration:none;font-size:12px;font-weight:500;"><span style="background:#1A3558;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;">💬</span>+234 803 271 0570</a>'+
+  '<a href="https://freestudyhub.store" target="_blank" style="display:flex;align-items:center;gap:7px;color:#2DD4BF;text-decoration:none;font-size:12px;font-weight:500;"><span style="background:#1A3558;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;">🌐</span>freestudyhub.store</a>'+
+  '<a href="https://youtube.com/@LeonardNwosu-k8z" target="_blank" style="display:flex;align-items:center;gap:7px;color:#FC4444;text-decoration:none;font-size:12px;font-weight:500;"><span style="background:#1A3558;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;">▶</span>youtube.com/@LeonardNwosu-k8z</a>'+
+  '</div>';
+var FOOT='<footer class="leaffoot"><svg viewBox="0 0 38 44" width="34" height="40" style="margin-bottom:8px;"><use href="#leaf"/></svg>'+
+  '<div class="fn">FreeStudy Hub</div><div class="ft">Learn Free. Go Further.</div>'+
+  CONTACTS+
+  '<div style="margin:14px 0 0;"><a class="cta" href="https://freestudyhub.store" target="_blank">Join Now — It\'s Free</a></div>'+
+  '<div class="cr">Prepared by <span style="color:#7A96BC;font-weight:600;">Leonard Nwosu</span> · Free Study Hub<br>© 2026 Free Study Hub. All Rights Reserved.</div></footer>';
+
+SprintAuth.gate().then(async function(ctx){
+  ME=ctx.user; PROF=ctx.profile||{}; myEk=SprintGame.emailKey(PROF.email||ME.email);
+  document.getElementById("who").textContent=PROF.nickname||PROF.name||ME.email;
+  document.getElementById("loading").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  var best=await SprintGame.myBest(PROF.email||ME.email);
+  renderLobby(best);
+});
+
+/* ---------------- LOBBY ---------------- */
+async function renderLobby(best){
+  stopSub();
+  document.getElementById("footSlot").innerHTML=FOOT;
+  var tier=SprintGame.titleForScore(best);
+  var top=await SprintGame.globalLeaderboard(6);
+  var v=document.getElementById("view");
+  v.innerHTML=
+    '<div style="animation:fade .3s ease;max-width:660px;margin:0 auto;">'+
+      '<div style="text-align:center;">'+
+        '<div class="lab" style="color:var(--teal-d);">Ready to sprint</div>'+
+        '<h1 class="serif" style="font-size:40px;font-weight:600;letter-spacing:-.02em;margin:8px 0 6px;color:var(--navy);">Beat your best</h1>'+
+        '<div style="color:var(--muted);font-size:15px;margin-bottom:24px;">20 formula problems · +100 per correct · streaks up to ×3 · hint costs 40</div>'+
+      '</div>'+
+      '<div class="card" style="padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:16px;">'+
+        '<div style="width:52px;height:52px;border-radius:14px;background:'+avColor(PROF.nickname||PROF.name)+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:#fff;flex-shrink:0;">'+esc(initials(PROF.nickname||PROF.name))+'</div>'+
+        '<div style="flex:1;min-width:0;"><div style="font-weight:800;font-size:18px;color:var(--navy);">'+esc(PROF.nickname||PROF.name||"You")+'</div>'+
+          '<div style="font-size:13px;color:var(--muted);margin-top:2px;">'+esc(tier)+' · best <b style="color:var(--ink);">'+best+'</b>'+(PROF.classCode?(' · class <b style="color:var(--teal-d);">'+esc(PROF.classCode)+'</b>'):'')+'</div></div>'+
+        '<button class="btn btn-p" style="padding:15px 30px;font-size:16px;" onclick="startSprint()">⚡ Start</button>'+
+      '</div>'+
+      (top.length?('<div class="card" style="padding:14px 12px;">'+
+        '<div class="lab" style="padding:4px 8px 10px;">Global top players</div>'+
+        top.map(function(p,i){return boardRow(p,i,p.emailKey===myEk);}).join("")+
+        '<div style="text-align:center;padding:10px 0 4px;"><a href="leaderboard.html" style="color:var(--blue);font-weight:700;font-size:13px;text-decoration:none;">View full leaderboard →</a></div>'+
+      '</div>'):'')+
+    '</div>';
+}
+
+function boardRow(p,i,you){
+  var rc={0:"#D97706",1:"#94A3B8",2:"#B45309"}[i]||"var(--muted)";
+  var score=p.bestScore||0, tier=SprintGame.titleForScore(score);
+  return '<div style="display:flex;align-items:center;gap:11px;padding:10px 10px;border-radius:11px;'+(you?"background:#EFF6FF;border:1px solid #BFDBFE;":"border:1px solid transparent;")+'">'+
+    '<div style="width:24px;text-align:center;font-weight:700;font-size:14px;color:'+rc+';">'+(i+1)+'</div>'+
+    '<div style="width:34px;height:34px;border-radius:10px;background:'+avColor(p.name)+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;">'+esc(initials(p.name))+'</div>'+
+    '<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;color:'+(you?"var(--blue)":"var(--ink)")+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(p.name)+(you?" (you)":"")+'</div>'+
+      '<div style="font-size:11px;font-weight:600;color:var(--muted);">'+esc(tier)+'</div></div>'+
+    '<div style="font-weight:800;font-size:15px;color:var(--navy);">'+score+'</div></div>';
+}
+
+/* ---------------- PLAY ---------------- */
+async function startSprint(){
+  document.getElementById("footSlot").innerHTML="";
+  G={index:0,score:0,streak:0,correct:0,answered:0,selected:null,locked:false,hints:{},live:[],playing:true};
+  await SprintGame.joinRoom(ROOM,PROF);
+  stopSub();
+  unsub=SprintGame.subscribeRoom(ROOM,function(players){
+    var now=Date.now();
+    G.live=players.filter(function(p){return (now-(p.updatedAt||0))<90000;});
+    if(G&&G.playing) renderBoardOnly();
+  },1200);
+  renderPlay();
+}
+
+function renderPlay(){
+  var q=Q[G.index];
+  document.getElementById("view").innerHTML=
+    '<div style="max-width:1080px;margin:0 auto;">'+
+    '<div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 20px;margin-bottom:16px;background:var(--navy);border:none;">'+
+      '<div style="min-width:150px;"><div class="lab" style="color:#8FA6C4;">Question '+(G.index+1)+' / 20</div>'+
+        '<div style="height:6px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden;margin-top:7px;width:180px;"><div style="height:100%;width:'+((G.index+1)/20*100)+'%;background:linear-gradient(90deg,var(--teal),var(--blue));"></div></div></div>'+
+      '<div style="text-align:center;position:relative;"><div id="scoreN" style="font-weight:800;font-size:34px;color:#fff;line-height:1;">'+G.score+'</div><div class="lab" style="color:#8FA6C4;margin-top:3px;">Points</div><div id="gain"></div></div>'+
+      '<div style="min-width:150px;text-align:right;"><div class="lab" style="color:#8FA6C4;">Streak</div><div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:4px;"><span style="font-weight:800;font-size:22px;color:'+(G.streak>=2?"#FBBF24":"#8FA6C4")+';">×'+fmtMult(multForStreak(Math.max(1,G.streak)))+'</span><span style="font-size:18px;filter:'+(G.streak>=2?"none":"grayscale(1) opacity(.5)")+';">🔥</span></div></div>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start;">'+
+      '<div class="card" style="padding:26px 28px;">'+
+        '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">'+(q.tags||[]).map(function(t){return '<span style="font-size:11px;font-weight:600;color:var(--teal-d);background:#CCFBF1;padding:4px 11px;border-radius:20px;">'+esc(t)+'</span>';}).join("")+'</div>'+
+        '<div class="serif" style="font-size:19px;line-height:1.7;color:var(--ink);margin-bottom:16px;">'+esc(q.stem)+'</div>'+
+        '<div id="hintSlot" style="margin-bottom:18px;"></div>'+
+        '<div id="opts" style="display:flex;flex-direction:column;gap:9px;"></div>'+
+      '</div>'+
+      '<div class="card" style="padding:16px 14px;position:sticky;top:74px;">'+
+        '<div style="display:flex;align-items:center;gap:7px;padding:0 4px 12px;" class="lab"><span style="width:7px;height:7px;border-radius:50%;background:#DC2626;animation:pulse 1.2s infinite;"></span>Live standings</div>'+
+        '<div id="liveBoard"></div>'+
+        '<div style="font-size:11px;color:var(--muted);text-align:center;padding:10px 4px 2px;line-height:1.5;">Others racing appear here in real time. Alone? You\'re racing the pace-setters.</div>'+
+      '</div>'+
+    '</div></div>';
+  renderHint(); renderOpts(); renderBoardOnly();
+}
+
+function renderHint(){
+  var q=Q[G.index],slot=document.getElementById("hintSlot"); if(!slot)return;
+  if(G.hints[G.index]){
+    slot.innerHTML='<div style="background:var(--off);border:1px solid var(--line);border-left:3px solid var(--teal-d);border-radius:8px;padding:12px 16px;animation:pop .3s ease;"><div class="lab" style="color:var(--teal-d);margin-bottom:5px;">Formula hint</div><div class="serif" style="font-size:17px;font-weight:600;color:var(--navy);">'+esc(q.formula)+'</div></div>';
+  } else {
+    slot.innerHTML='<button '+(G.locked?"disabled":"")+' onclick="revealHint()" style="display:inline-flex;align-items:center;gap:8px;background:#F5F3FF;border:1px dashed #A78BFA;color:#6D28D9;font:inherit;font-weight:600;font-size:13px;padding:9px 15px;border-radius:9px;cursor:'+(G.locked?"not-allowed":"pointer")+';">🔒 Reveal formula hint <span style="background:#EDE9FE;padding:1px 8px;border-radius:6px;font-weight:700;">−40</span></button>';
+  }
+}
+function revealHint(){
+  if(G.locked||G.hints[G.index])return;
+  G.hints[G.index]=true; G.score=Math.max(0,G.score-40);
+  document.getElementById("scoreN").textContent=G.score;
+  renderHint(); pushLive();
+}
+
+function renderOpts(){
+  var q=Q[G.index],box=document.getElementById("opts"); if(!box)return;
+  box.innerHTML=q.options.map(function(text,i){
+    var isSel=G.selected===i,border="var(--line)",bg="var(--off)",mkB="#CBD5E1",mkBg="#fff",mkC="var(--muted)",txt="var(--ink)",mk=LETTERS[i];
+    if(G.locked){var corr=q.answer===i;
+      if(corr){border="#6EE7B7";bg="#ECFDF5";mkB="#10B981";mkBg="#10B981";mkC="#fff";txt="#064E3B";mk="✓";}
+      else if(isSel){border="#FCA5A5";bg="#FEF2F2";mkB="#EF4444";mkBg="#EF4444";mkC="#fff";txt="#7F1D1D";mk="✕";}
+    } else if(isSel){border="#3B82F6";bg="#EFF6FF";mkB="var(--blue)";mkBg="var(--blue)";mkC="#fff";txt="#1D40AF";}
+    return '<div onclick="answer('+i+')" style="display:flex;align-items:center;gap:14px;padding:13px 16px;border:1.5px solid '+border+';border-radius:8px;cursor:'+(G.locked?"default":"pointer")+';background:'+bg+';transition:all .12s;">'+
+      '<div style="width:26px;height:26px;border:2px solid '+mkB+';border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:'+mkC+';background:'+mkBg+';">'+mk+'</div>'+
+      '<div class="serif" style="flex:1;font-size:15.5px;line-height:1.45;color:'+txt+';">'+esc(text)+'</div></div>';
+  }).join("");
+}
+
+function renderBoardOnly(){
+  var box=document.getElementById("liveBoard"); if(!box)return;
+  var players=(G.live||[]).map(function(p){return p.emailKey===myEk?Object.assign({},p,{score:G.score,answered:G.answered}):p;});
+  if(!players.some(function(p){return p.emailKey===myEk;})) players.push({emailKey:myEk,name:PROF.nickname||PROF.name,score:G.score,answered:G.answered});
+  players.sort(function(a,b){return (b.score||0)-(a.score||0);});
+  var rc={0:"#D97706",1:"#94A3B8",2:"#B45309"};
+  box.innerHTML=players.slice(0,8).map(function(p,i){
+    var you=p.emailKey===myEk;
+    return '<div style="display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:9px;'+(you?"background:#EFF6FF;border:1px solid #BFDBFE;":"border:1px solid transparent;")+'">'+
+      '<div style="width:20px;text-align:center;font-weight:700;font-size:13px;color:'+(rc[i]||"var(--muted)")+';">'+(i+1)+'</div>'+
+      '<div style="width:28px;height:28px;border-radius:8px;background:'+avColor(p.name)+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#fff;">'+esc(initials(p.name))+'</div>'+
+      '<div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:13px;color:'+(you?"var(--blue)":"var(--ink)")+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(p.name)+'</div>'+
+        '<div style="height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:4px;"><div style="height:100%;width:'+((p.answered||0)/20*100)+'%;background:'+(you?"var(--teal-d)":"#94A3B8")+';transition:width .4s;"></div></div></div>'+
+      '<div style="font-weight:700;font-size:13px;color:var(--navy);">'+(p.score||0)+'</div></div>';
+  }).join("");
+}
+
+function answer(i){
+  if(G.locked)return;
+  var q=Q[G.index],correct=i===q.answer;
+  G.selected=i; G.locked=true; G.answered++;
+  var gain=0;
+  if(correct){G.streak++;gain=Math.round(100*multForStreak(G.streak));G.score+=gain;G.correct++;}
+  else {G.streak=0;}
+  document.getElementById("scoreN").textContent=G.score;
+  var g=document.getElementById("gain");
+  if(g) g.innerHTML='<div style="position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-weight:800;font-size:18px;color:'+(correct?"#34D399":"#FB7185")+';animation:floatUp 1s ease forwards;">'+(correct?("+"+gain):"miss")+'</div>';
+  renderHint(); renderOpts(); pushLive();
+  clearTimeout(advTimer); advTimer=setTimeout(advance,950);
+}
+function advance(){
+  if(G.index<Q.length-1){G.index++;G.selected=null;G.locked=false;renderPlay();window.scrollTo(0,0);}
+  else finish();
+}
+function pushLive(){SprintGame.pushProgress(ROOM,{name:PROF.nickname||PROF.name,email:PROF.email,score:G.score,streak:G.streak,answered:G.answered,done:false});}
+
+/* ---------------- RESULT ---------------- */
+async function finish(){
+  G.playing=false;
+  await SprintGame.finishRun(ROOM,{name:PROF.nickname||PROF.name,email:PROF.email,score:G.score,answered:G.answered,classCode:PROF.classCode});
+  stopSub();
+  var board=await SprintGame.globalLeaderboard(50);
+  var youRank=board.findIndex(function(p){return p.emailKey===myEk;})+1;
+  renderResult(board,youRank||board.length);
+}
+
+function renderResult(board,youRank){
+  document.getElementById("footSlot").innerHTML=FOOT;
+  var won=youRank===1;
+  var tier=SprintGame.titleForScore(G.score),nextT=SprintGame.nextTier(G.score);
+  var curMin=({Rookie:0,Apprentice:1000,Sharpshooter:2000,Ace:3000,Master:4000,Grandmaster:5000})[tier]||0;
+  var prog=nextT?Math.min(100,Math.round((G.score-curMin)/(nextT.min-curMin)*100)):100;
+  var medals=["🥇","🥈","🥉"],order=[1,0,2],heights={0:96,1:70,2:54},rings={0:"#D97706",1:"#94A3B8",2:"#B45309"};
+  var podHtml=order.filter(function(idx){return board[idx];}).map(function(idx){
+    var p=board[idx];
+    return '<div style="animation:rise .4s ease '+(idx*0.08)+'s both;width:120px;">'+
+      '<div style="width:56px;height:56px;border-radius:16px;margin:0 auto 10px;background:'+avColor(p.name)+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff;border:3px solid '+rings[idx]+';">'+esc(initials(p.name))+'</div>'+
+      '<div style="font-weight:700;font-size:14px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;color:var(--navy);">'+esc(p.name)+'</div>'+
+      '<div style="font-size:13px;color:var(--muted);text-align:center;">'+(p.bestScore||0)+'</div>'+
+      '<div style="margin-top:10px;height:'+heights[idx]+'px;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#E8EFF7,#F7F9FC);border:1.5px solid var(--line);border-bottom:none;display:flex;align-items:flex-start;justify-content:center;padding-top:10px;"><span style="font-size:22px;">'+medals[idx]+'</span></div></div>';
+  }).join("");
+  var confetti=won?Array.from({length:26}).map(function(_,i){var cols=["#0D9488","#FBBF24","#1D4ED8","#7C3AED","#DB2777"];var l=Math.round(Math.random()*100),d=(2.6+Math.random()*1.8).toFixed(2),dl=(Math.random()*1.2).toFixed(2),sz=6+Math.round(Math.random()*6);return '<div style="position:absolute;top:0;left:'+l+'%;width:'+sz+'px;height:'+(sz+3)+'px;background:'+cols[i%cols.length]+';border-radius:2px;animation:confetti '+d+'s linear '+dl+'s infinite;"></div>';}).join(""):"";
+
+  document.getElementById("view").innerHTML='<div style="max-width:820px;margin:0 auto;animation:fade .3s ease;position:relative;">'+
+    (won?'<div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">'+confetti+'</div>':'')+
+    '<div style="text-align:center;margin-bottom:26px;position:relative;"><div class="lab" style="color:'+(won?"#D97706":"var(--teal-d)")+';">'+(won?"Champion":("You placed #"+youRank))+'</div>'+
+      '<h1 class="serif" style="font-size:38px;font-weight:600;letter-spacing:-.02em;margin:6px 0;color:var(--navy);">'+(won?"You won the sprint! 🏆":(youRank<=3?"On the podium!":"Sprint complete"))+'</h1></div>'+
+    '<div style="display:flex;align-items:flex-end;justify-content:center;gap:14px;margin-bottom:26px;">'+podHtml+'</div>'+
+    '<div class="card" style="padding:22px;margin-bottom:18px;"><div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">'+
+      '<div style="text-align:center;"><div style="font-weight:800;font-size:40px;line-height:1;color:var(--navy);">#'+youRank+'</div><div class="lab" style="margin-top:3px;">Global rank</div></div>'+
+      '<div style="width:1px;height:52px;background:var(--line);"></div>'+
+      '<div style="text-align:center;"><div style="font-weight:800;font-size:40px;line-height:1;color:var(--navy);">'+G.score+'</div><div class="lab" style="margin-top:3px;">Points</div></div>'+
+      '<div style="width:1px;height:52px;background:var(--line);"></div>'+
+      '<div style="text-align:center;"><div style="font-weight:800;font-size:40px;line-height:1;color:#059669;">'+G.correct+'<span style="font-size:20px;color:var(--muted);">/20</span></div><div class="lab" style="margin-top:3px;">Correct</div></div>'+
+      '<div style="flex:1;min-width:180px;"><div style="margin-bottom:8px;"><span style="display:inline-flex;align-items:center;gap:6px;background:#CCFBF1;color:var(--teal-d);font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;">'+esc(tier)+'</span></div>'+
+        '<div style="height:7px;background:var(--line);border-radius:5px;overflow:hidden;"><div style="height:100%;width:'+prog+'%;background:linear-gradient(90deg,var(--teal),var(--blue));"></div></div>'+
+        '<div style="font-size:11px;color:var(--muted);margin-top:6px;">'+(nextT?((nextT.min-G.score)+" pts to "+nextT.name):"Top tier reached 👑")+'</div></div>'+
+    '</div></div>'+
+    '<div class="card" style="overflow:hidden;margin-bottom:20px;"><div style="padding:16px 18px 4px;font-weight:800;font-size:15px;color:var(--navy);">Global leaderboard</div>'+
+      '<div style="padding:8px 12px 16px;">'+board.slice(0,10).map(function(p,i){return boardRow(p,i,p.emailKey===myEk);}).join("")+'</div></div>'+
+    '<div style="display:flex;gap:12px;justify-content:center;"><button class="btn btn-p" style="padding:14px 26px;font-size:15px;" onclick="startSprint()">Play again</button>'+
+      '<a href="leaderboard.html" class="btn btn-s" style="padding:14px 26px;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;">Full leaderboard</a></div>'+
+  '</div>';
+}
+
+function stopSub(){if(unsub){unsub();unsub=null;}}
+window.addEventListener("beforeunload",function(){stopSub();if(G&&G.playing)SprintGame.leaveRoom(ROOM,PROF.email);});
+window.startSprint=startSprint;window.answer=answer;window.revealHint=revealHint;
+</script>
+</body>
+</html>

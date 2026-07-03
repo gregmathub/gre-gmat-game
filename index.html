@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in · FreeStudy Hub — Formula Sprint</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+:root{--navy:#0B1F3A;--navy-mid:#1A3558;--blue:#1D4ED8;--blue-h:#1E40AF;--teal:#2DD4BF;--teal-d:#0D9488;--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--bg:#F1F5F9;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);background:var(--navy);min-height:100vh;display:flex;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.brand{flex:1;display:none;flex-direction:column;justify-content:space-between;padding:54px;background:linear-gradient(160deg,#102a4c,#0B1F3A);color:#fff;}
+.auth{flex:0 0 100%;display:flex;align-items:center;justify-content:center;padding:30px 22px;background:var(--bg);}
+@media(min-width:880px){.brand{display:flex;}.auth{flex:0 0 500px;}.mlogo{display:none;}}
+.card{width:100%;max-width:400px;animation:fade .25s ease;}
+.logo-row{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:40px;height:44px;flex:0 0 auto;}
+.kick{font-weight:800;font-size:13px;letter-spacing:1px;text-transform:uppercase;}
+.kick-sub{font-size:9px;letter-spacing:2px;color:var(--teal);text-transform:uppercase;}
+h1{font-family:'Source Serif 4',serif;font-weight:600;font-size:27px;margin:0 0 4px;letter-spacing:-.01em;}
+.sub{font-size:14px;color:var(--muted);margin:0 0 22px;}
+.tabs{display:flex;background:#E3E8F0;border-radius:11px;padding:4px;margin-bottom:18px;}
+.tab{flex:1;height:38px;border:none;border-radius:8px;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);}
+.tab.on{background:#fff;color:var(--navy);font-weight:700;box-shadow:0 1px 3px rgba(11,31,58,.12);}
+.field{margin-bottom:13px;}
+.lab{font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;display:block;}
+.opt-note{font-size:11.5px;color:var(--muted);margin:-3px 0 0;line-height:1.5;}
+.inp{width:100%;font:inherit;font-size:15px;padding:13px 15px;border:1.5px solid #CBD5E1;border-radius:10px;background:#fff;color:var(--ink);outline:none;}
+.inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.12);}
+.err{margin-top:14px;background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;font-size:13px;font-weight:600;border-radius:9px;padding:10px 13px;display:none;}
+.go{margin-top:20px;width:100%;height:50px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--teal-d),var(--blue));color:#fff;font:inherit;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 6px 18px rgba(13,148,136,.28);}
+.go:hover{opacity:.94;}
+.go:disabled{opacity:.6;cursor:default;}
+.spin{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;}
+.switch{text-align:center;margin-top:18px;font-size:13.5px;color:var(--muted);}
+.link{background:none;border:none;color:var(--blue);font:inherit;font-weight:700;cursor:pointer;padding:0;}
+.note{margin-top:20px;font-size:12px;color:var(--muted);text-align:center;line-height:1.5;}
+.mlogo{display:flex;align-items:center;gap:11px;margin-bottom:22px;}
+.big{font-family:'Source Serif 4',serif;font-weight:600;font-size:38px;line-height:1.12;letter-spacing:-.02em;}
+.stat-row{display:flex;gap:26px;}
+.stat b{font-family:'Source Serif 4',serif;font-weight:600;font-size:24px;display:block;}
+.stat span{font-size:12px;color:#9FB3CC;}
+.pill{display:inline-flex;align-items:center;gap:8px;background:rgba(45,212,191,.14);border:1px solid rgba(45,212,191,.3);color:var(--teal);font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;padding:6px 13px;border-radius:20px;}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><g id="leaf"><circle cx="19" cy="6" r="5.5" fill="#2DD4BF"/><path d="M12,14 Q19,10 26,14 L24,23 L14,23 Z" fill="#2DD4BF"/><path d="M7,21 Q13,17 19,21 L19,32 Q13,30 7,32 Z" fill="#2DD4BF"/><path d="M19,21 Q25,17 31,21 L31,32 Q25,30 19,32 Z" fill="#2DD4BF"/></g></defs></svg>
+
+<div class="brand">
+  <div class="logo-row">
+    <svg viewBox="0 0 38 44" class="logo-mark"><use href="#leaf"/></svg>
+    <div><div class="kick" style="color:#fff;">FreeStudy Hub</div><div class="kick-sub">Learn Free. Go Further.</div></div>
+  </div>
+  <div>
+    <div class="pill" style="margin-bottom:18px;">⚡ Formula Sprint</div>
+    <div class="big">Race the<br>formulas.<br>Climb the board.</div>
+    <p style="font-size:15px;line-height:1.6;color:#9FB3CC;max-width:420px;margin:18px 0 0;">A live GRE / GMAT quant game. Answer fast, build streaks, and compete with other FreeStudy Hub members — or challenge the computer any time.</p>
+  </div>
+  <div class="stat-row">
+    <div class="stat"><b>20</b><span>formula problems</span></div>
+    <div class="stat"><b>×3</b><span>streak multiplier</span></div>
+    <div class="stat"><b>Live</b><span>leaderboard</span></div>
+  </div>
+</div>
+
+<div class="auth">
+  <div class="card">
+    <div class="mlogo"><svg viewBox="0 0 38 44" class="logo-mark"><use href="#leaf"/></svg><div><div class="kick" style="color:var(--navy);">FreeStudy Hub</div><div class="kick-sub" style="color:#0d9488;">Learn Free. Go Further.</div></div></div>
+    <h1 id="title">Welcome back</h1>
+    <p class="sub" id="subt">Sign in to jump into Formula Sprint.</p>
+    <div class="tabs">
+      <button class="tab on" id="tabIn" onclick="setMode('in')">Sign in</button>
+      <button class="tab" id="tabUp" onclick="setMode('up')">Create account</button>
+    </div>
+
+    <div id="fName" class="field" style="display:none;">
+      <label class="lab" for="name">Full name</label>
+      <input class="inp" id="name" type="text" placeholder="e.g. Amaka Okafor" autocomplete="name">
+    </div>
+    <div class="field">
+      <label class="lab" for="email">Email</label>
+      <input class="inp" id="email" type="email" placeholder="you@email.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label class="lab" for="password">Password</label>
+      <input class="inp" id="password" type="password" placeholder="At least 6 characters" autocomplete="current-password">
+    </div>
+    <div id="fNick" class="field" style="display:none;">
+      <label class="lab" for="nickname">Nickname</label>
+      <input class="inp" id="nickname" maxlength="16" placeholder="Shown on the leaderboard">
+    </div>
+    <div id="fClass" class="field" style="display:none;">
+      <label class="lab" for="classCode">Class code <span style="font-weight:500;color:var(--muted);">(optional)</span></label>
+      <input class="inp" id="classCode" maxlength="8" placeholder="e.g. K7P2QM" style="text-transform:uppercase;">
+      <p class="opt-note">Ask your instructor for a code to appear on your class board. Leave blank to play global/solo.</p>
+    </div>
+
+    <div class="err" id="err"></div>
+    <button class="go" id="go" onclick="submit()"><span class="spin" id="spin"></span><span id="goLabel">Sign in</span></button>
+    <div class="switch" id="switch">New here? <button class="link" onclick="setMode('up')">Create an account</button></div>
+    <div class="note">🔒 Your progress is shared only with your FreeStudy Hub instructor, Leonard Nwosu.</div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line);">
+      <a href="https://wa.me/2348032710570" target="_blank" style="display:flex;align-items:center;gap:6px;color:#128C7E;text-decoration:none;font-size:12px;font-weight:600;">💬 WhatsApp</a>
+      <a href="https://freestudyhub.store" target="_blank" style="display:flex;align-items:center;gap:6px;color:var(--teal-d);text-decoration:none;font-size:12px;font-weight:600;">🌐 freestudyhub.store</a>
+      <a href="https://youtube.com/@LeonardNwosu-k8z" target="_blank" style="display:flex;align-items:center;gap:6px;color:#DC2626;text-decoration:none;font-size:12px;font-weight:600;">▶ YouTube</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="sprint-auth.js"></script>
+<script>
+var mode="in";
+var NEXT=new URLSearchParams(location.search).get("next")||"game.html";
+SprintAuth.onReady(function(user){ if(user) location.replace(NEXT); });
+
+function setMode(m){
+  mode=m; var up=m==="up";
+  document.getElementById("tabIn").classList.toggle("on",!up);
+  document.getElementById("tabUp").classList.toggle("on",up);
+  document.getElementById("fName").style.display=up?"block":"none";
+  document.getElementById("fNick").style.display=up?"block":"none";
+  document.getElementById("fClass").style.display=up?"block":"none";
+  document.getElementById("title").textContent=up?"Create your account":"Welcome back";
+  document.getElementById("subt").textContent=up?"Sign up to start racing and tracking progress.":"Sign in to jump into Formula Sprint.";
+  document.getElementById("goLabel").textContent=up?"Create account & play":"Sign in";
+  document.getElementById("password").autocomplete=up?"new-password":"current-password";
+  document.getElementById("switch").innerHTML=up?'Already a member? <button class="link" onclick="setMode(\'in\')">Sign in</button>':'New here? <button class="link" onclick="setMode(\'up\')">Create an account</button>';
+  hideErr();
+}
+function showErr(m){var e=document.getElementById("err");e.textContent=m;e.style.display="block";}
+function hideErr(){document.getElementById("err").style.display="none";}
+function busy(on){document.getElementById("spin").style.display=on?"block":"none";document.getElementById("go").disabled=on;}
+function pretty(e){var m=(e&&e.message)||String(e);m=m.replace("Firebase: ","").replace(/\(auth.*\)\.?/,"").trim();
+  if(/already-in-use/.test(m))return "That email is already registered — try signing in.";
+  if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(m))return "Email or password is incorrect.";
+  if(/weak-password|6 characters/.test(m))return "Password must be at least 6 characters.";
+  if(/invalid-email/.test(m))return "That email address looks invalid.";
+  if(/configuration-not-found|operation-not-allowed/.test(m))return "Email/Password sign-in isn't enabled in Firebase yet.";
+  return m;}
+
+async function submit(){
+  hideErr();
+  var email=document.getElementById("email").value.trim();
+  var password=document.getElementById("password").value;
+  if(!email||!password){showErr("Enter your email and password.");return;}
+  busy(true);
+  try{
+    if(mode==="up"){
+      var name=document.getElementById("name").value.trim();
+      var nickname=document.getElementById("nickname").value.trim();
+      var classCode=document.getElementById("classCode").value.trim();
+      if(!name){throw {message:"Enter your name."};}
+      if(password.length<6){throw {message:"Password must be at least 6 characters."};}
+      await SprintAuth.signUp({name:name,email:email,password:password,nickname:nickname||name,classCode:classCode});
+    } else {
+      await SprintAuth.signIn(email,password);
+    }
+    location.replace(NEXT);
+  }catch(e){ busy(false); showErr(pretty(e)); }
+}
+document.addEventListener("keydown",function(e){if(e.key==="Enter")submit();});
+setMode("in");
+</script>
+</body>
+</html>
