@@ -114,7 +114,7 @@ h1{font-family:'Source Serif 4',serif;font-weight:600;font-size:27px;margin:0 0 
 <script src="sprint-auth.js"></script>
 <script>
 var mode="in";
-var NEXT=new URLSearchParams(location.search).get("next")||"game.html";
+var NEXT=new URLSearchParams(location.search).get("next")||"games.html";
 SprintAuth.onReady(function(user){ if(user) location.replace(NEXT); });
 
 function setMode(m){
@@ -134,13 +134,15 @@ function setMode(m){
 function showErr(m){var e=document.getElementById("err");e.textContent=m;e.style.display="block";}
 function hideErr(){document.getElementById("err").style.display="none";}
 function busy(on){document.getElementById("spin").style.display=on?"block":"none";document.getElementById("go").disabled=on;}
-function pretty(e){var m=(e&&e.message)||String(e);m=m.replace("Firebase: ","").replace(/\(auth.*\)\.?/,"").trim();
+function pretty(e){var m=(e&&e.code)||(e&&e.message)||String(e);m=m.replace("Firebase: ","").replace(/\(auth.*\)\.?/,"").trim();
   if(/already-in-use/.test(m))return "That email is already registered — try signing in.";
   if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(m))return "Email or password is incorrect.";
   if(/weak-password|6 characters/.test(m))return "Password must be at least 6 characters.";
   if(/invalid-email/.test(m))return "That email address looks invalid.";
-  if(/configuration-not-found|operation-not-allowed/.test(m))return "Email/Password sign-in isn't enabled in Firebase yet.";
-  return m;}
+  if(/configuration-not-found|operation-not-allowed/.test(m))return "Email/Password sign-in isn't enabled in Firebase. Console → Authentication → Sign-in method → enable Email/Password.";
+  if(/network|Failed to fetch/i.test(m))return "Network error reaching Firebase — check your connection.";
+  if(/permission|PERMISSION_DENIED/i.test(m))return "Database rules not published yet — paste database.rules.json into RTDB → Rules → Publish.";
+  return m && m!=="Error" ? m : "Couldn't create the account. Open the browser console (F12) for the exact error.";}
 
 async function submit(){
   hideErr();

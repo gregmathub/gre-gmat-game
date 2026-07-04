@@ -50,12 +50,13 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 <body>
 <svg width="0" height="0" style="position:absolute"><defs><g id="leaf"><circle cx="19" cy="6" r="5.5" fill="#2DD4BF"/><path d="M12,14 Q19,10 26,14 L24,23 L14,23 Z" fill="#2DD4BF"/><path d="M7,21 Q13,17 19,21 L19,32 Q13,30 7,32 Z" fill="#2DD4BF"/><path d="M19,21 Q25,17 31,21 L31,32 Q25,30 19,32 Z" fill="#2DD4BF"/></g></defs></svg>
 
-<div class="topbar">
+<div class="topbar" id="topbar">
   <div class="brandrow">
     <svg viewBox="0 0 38 44" width="24" height="28"><use href="#leaf"/></svg>
     <div><div class="kick">FreeStudy Hub</div><div class="kick-sub">Formula Sprint</div></div>
   </div>
   <div class="nav">
+    <a href="games.html">Games</a>
     <a href="leaderboard.html">Leaderboard</a>
     <span class="who" id="who"></span>
     <button class="so" onclick="SprintAuth.signOut().then(function(){location.href='index.html';})">Sign out</button>
@@ -104,8 +105,10 @@ SprintAuth.gate().then(async function(ctx){
 });
 
 /* ---------------- LOBBY ---------------- */
+function setSticky(on){var t=document.getElementById("topbar");if(t)t.style.position=on?"sticky":"static";}
+
 async function renderLobby(best){
-  stopSub();
+  stopSub(); setSticky(true);
   document.getElementById("footSlot").innerHTML=FOOT;
   var tier=SprintGame.titleForScore(best);
   var top=await SprintGame.globalLeaderboard(6);
@@ -157,6 +160,7 @@ async function startSprint(){
 }
 
 function renderPlay(){
+  setSticky(true);
   var q=Q[G.index];
   document.getElementById("view").innerHTML=
     '<div style="max-width:1080px;margin:0 auto;">'+
@@ -258,6 +262,7 @@ async function finish(){
 }
 
 function renderResult(board,youRank){
+  setSticky(false);
   document.getElementById("footSlot").innerHTML=FOOT;
   var won=youRank===1;
   var tier=SprintGame.titleForScore(G.score),nextT=SprintGame.nextTier(G.score);
