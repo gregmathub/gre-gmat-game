@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapid Fire · FreeStudy Hub</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+:root{--navy:#0B1F3A;--navy-mid:#1A3558;--blue:#1D4ED8;--teal:#2DD4BF;--teal-d:#0D9488;--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--bg:#F1F5F9;--off:#F7F9FC;--fire:#EA580C;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+@keyframes floatUp{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-40px);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flash{0%{background:#FFF7ED}100%{background:#fff}}
+.topbar{height:58px;background:var(--navy);border-bottom:3px solid var(--teal);display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:50;}
+.brandrow{display:flex;align-items:center;gap:11px;}
+.kick{font-weight:800;font-size:14px;letter-spacing:.5px;color:#fff;}
+.kick-sub{font-size:9px;letter-spacing:2px;color:var(--teal);text-transform:uppercase;}
+.nav a,.nav button{font:inherit;font-size:13px;font-weight:600;color:#B9C9DE;background:none;border:none;padding:7px 12px;border-radius:8px;cursor:pointer;text-decoration:none;}
+.nav a:hover{color:#fff;background:rgba(255,255,255,.08);}
+.so{border:1.5px solid rgba(255,255,255,.22)!important;color:#fff!important;}
+.container{max-width:720px;margin:0 auto;padding:26px 22px 50px;}
+.center{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted);}
+.spinner{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--fire);border-radius:50%;animation:spin .7s linear infinite;}
+.hidden{display:none!important;}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(11,31,58,.04);}
+.btn{font:inherit;font-weight:700;border:none;border-radius:10px;cursor:pointer;}
+.btn-f{background:linear-gradient(135deg,#EA580C,#DB2777);color:#fff;box-shadow:0 6px 18px rgba(234,88,12,.28);}
+.btn-s{background:var(--off);border:1.5px solid var(--line);color:var(--ink);}
+.lab{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);}
+.serif{font-family:'Source Serif 4',serif;}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><g id="leaf"><circle cx="19" cy="6" r="5.5" fill="#2DD4BF"/><path d="M12,14 Q19,10 26,14 L24,23 L14,23 Z" fill="#2DD4BF"/><path d="M7,21 Q13,17 19,21 L19,32 Q13,30 7,32 Z" fill="#2DD4BF"/><path d="M19,21 Q25,17 31,21 L31,32 Q25,30 19,32 Z" fill="#2DD4BF"/></g></defs></svg>
+
+<div class="topbar">
+  <div class="brandrow">
+    <svg viewBox="0 0 38 44" width="24" height="28"><use href="#leaf"/></svg>
+    <div><div class="kick">FreeStudy Hub</div><div class="kick-sub">Rapid Fire</div></div>
+  </div>
+  <div class="nav"><a href="games.html">← All games</a><a href="leaderboard.html">Leaderboard</a><button class="so" onclick="SprintAuth.signOut().then(function(){location.href='index.html';})">Sign out</button></div>
+</div>
+
+<div id="loading" class="center"><div class="spinner"></div></div>
+<div id="app" class="hidden"><div class="container" id="view"></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="sprint-auth.js"></script>
+<script src="sprint-game.js"></script>
+<script src="math-games.js"></script>
+<script>
+var GAMES=window.MATH_GAMES||[];
+var LETTERS=["A","B","C","D","E"];
+var PROF=null, myEk="", myName="You";
+var DURATION=60;
+var R=null, timer=null, advTimer=null;
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function bestKey(){return "rapidfire_best_"+myEk;}
+function getBest(){try{return +localStorage.getItem(bestKey())||0;}catch(e){return 0;}}
+function setBest(v){try{localStorage.setItem(bestKey(),String(v));}catch(e){}}
+function multForStreak(s){return Math.min(1+Math.max(0,s-1)*0.5,3);}
+function fmtMult(m){return Number.isInteger(m)?String(m):m.toFixed(1);}
+
+function allQuestions(){
+  var qs=[];
+  GAMES.forEach(function(g){ g.formulas.forEach(function(f){ f.questions.forEach(function(q){ qs.push({stem:q.stem,options:q.options,answer:q.answer,concept:f.concept}); }); }); });
+  return qs;
+}
+
+SprintAuth.gate().then(function(ctx){
+  PROF=ctx.profile||{}; myEk=SprintGame.emailKey(PROF.email||ctx.user.email);
+  myName=PROF.nickname||PROF.name||ctx.user.email;
+  document.getElementById("loading").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  renderIntro();
+});
+
+/* ---------- INTRO ---------- */
+function renderIntro(){
+  clearInterval(timer);
+  var best=getBest();
+  document.getElementById("view").innerHTML='<div style="max-width:520px;margin:0 auto;text-align:center;animation:fade .3s ease;">'+
+    '<div style="width:74px;height:74px;border-radius:20px;margin:8px auto 16px;background:linear-gradient(135deg,#EA580C,#DB2777);display:flex;align-items:center;justify-content:center;font-size:36px;">🔥</div>'+
+    '<div class="lab" style="color:var(--fire);">60-second blitz</div>'+
+    '<h1 class="serif" style="font-size:36px;font-weight:600;color:var(--navy);margin:8px 0 8px;">Rapid Fire</h1>'+
+    '<div style="color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:8px;">Answer as many high-yield questions as you can in 60 seconds — pulled from every topic, including geometry. Keep a streak alive for up to ×3 points. Your best score joins the leaderboard.</div>'+
+    (best?'<div style="font-size:13px;font-weight:700;color:var(--fire);margin-bottom:20px;">Your best: '+best+'</div>':'<div style="margin-bottom:20px;"></div>')+
+    '<button class="btn btn-f" style="padding:16px 40px;font-size:17px;" onclick="startRapid()">🔥 Start blitz</button>'+
+  '</div>';
+}
+
+/* ---------- PLAY ---------- */
+function startRapid(){
+  R={Q:shuffle(allQuestions()),index:0,score:0,streak:0,correct:0,answered:0,timeLeft:DURATION,selected:null,locked:false};
+  clearInterval(timer);
+  timer=setInterval(function(){
+    if(!R)return; R.timeLeft--; var el=document.getElementById("clock");
+    if(R.timeLeft<=0){clearInterval(timer);finish();return;}
+    if(el){el.textContent=R.timeLeft;el.style.color=R.timeLeft<=10?"#DC2626":"#fff";}
+  },1000);
+  renderPlay();
+}
+
+function renderPlay(){
+  var q=R.Q[R.index%R.Q.length];
+  document.getElementById("view").innerHTML=
+    '<div style="max-width:640px;margin:0 auto;">'+
+    '<div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 20px;margin-bottom:16px;background:var(--navy);border:none;">'+
+      '<div style="text-align:center;min-width:90px;"><div id="scoreN" style="font-weight:800;font-size:28px;color:#fff;line-height:1;">'+R.score+'</div><div class="lab" style="color:#8FA6C4;">Points</div><div id="gain" style="position:relative;"></div></div>'+
+      '<div style="text-align:center;position:relative;"><div id="clock" style="font-weight:800;font-size:40px;color:#fff;line-height:1;">'+R.timeLeft+'</div><div class="lab" style="color:#8FA6C4;">seconds</div></div>'+
+      '<div style="text-align:center;min-width:90px;"><div style="font-weight:800;font-size:20px;color:'+(R.streak>=2?"#FBBF24":"#8FA6C4")+';">×'+fmtMult(multForStreak(Math.max(1,R.streak)))+' 🔥</div><div class="lab" style="color:#8FA6C4;">'+R.correct+' correct</div></div>'+
+    '</div>'+
+    '<div class="card" id="qcard" style="padding:24px 26px;">'+
+      '<div style="margin-bottom:12px;"><span style="font-size:11px;font-weight:600;color:var(--fire);background:#FFEDD5;padding:4px 11px;border-radius:20px;">'+esc(q.concept)+'</span></div>'+
+      '<div class="serif" style="font-size:19px;line-height:1.6;color:var(--ink);margin-bottom:16px;">'+esc(q.stem)+'</div>'+
+      '<div id="opts" style="display:flex;flex-direction:column;gap:9px;"></div>'+
+    '</div></div>';
+  renderOpts();
+}
+function renderOpts(){
+  var q=R.Q[R.index%R.Q.length],box=document.getElementById("opts"); if(!box)return;
+  box.innerHTML=q.options.map(function(text,i){
+    var isSel=R.selected===i,border="var(--line)",bg="var(--off)",mkB="#CBD5E1",mkBg="#fff",mkC="var(--muted)",txt="var(--ink)",mk=LETTERS[i];
+    if(R.locked){var corr=q.answer===i;
+      if(corr){border="#6EE7B7";bg="#ECFDF5";mkB="#10B981";mkBg="#10B981";mkC="#fff";txt="#064E3B";mk="✓";}
+      else if(isSel){border="#FCA5A5";bg="#FEF2F2";mkB="#EF4444";mkBg="#EF4444";mkC="#fff";txt="#7F1D1D";mk="✕";}
+    } else if(isSel){border="#3B82F6";bg="#EFF6FF";mkB="var(--blue)";mkBg="var(--blue)";mkC="#fff";txt="#1D40AF";}
+    return '<div onclick="answer('+i+')" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border:1.5px solid '+border+';border-radius:8px;cursor:'+(R.locked?"default":"pointer")+';background:'+bg+';">'+
+      '<div style="width:26px;height:26px;border:2px solid '+mkB+';border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:'+mkC+';background:'+mkBg+';">'+mk+'</div>'+
+      '<div class="serif" style="flex:1;font-size:15.5px;line-height:1.45;color:'+txt+';">'+esc(text)+'</div></div>';
+  }).join("");
+}
+function answer(i){
+  if(R.locked||R.timeLeft<=0)return;
+  var q=R.Q[R.index%R.Q.length],correct=i===q.answer;
+  R.selected=i; R.locked=true; R.answered++;
+  var gain=0;
+  if(correct){R.streak++;gain=Math.round(100*multForStreak(R.streak));R.score+=gain;R.correct++;}
+  else{R.streak=0;}
+  var sc=document.getElementById("scoreN"); if(sc)sc.textContent=R.score;
+  var g=document.getElementById("gain");
+  if(g)g.innerHTML='<div style="position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-weight:800;font-size:16px;color:'+(correct?"#34D399":"#FB7185")+';animation:floatUp 1s ease forwards;">'+(correct?("+"+gain):"miss")+'</div>';
+  renderOpts();
+  clearTimeout(advTimer);
+  advTimer=setTimeout(function(){ if(!R||R.timeLeft<=0)return; R.index++;R.selected=null;R.locked=false; renderPlay(); },450);
+}
+
+/* ---------- FINISH ---------- */
+function finish(){
+  clearInterval(timer); clearTimeout(advTimer);
+  var prevBest=getBest(), isPB=R.score>prevBest;
+  if(isPB)setBest(R.score);
+  try{ SprintGame.bumpLeaderboard({email:PROF.email,name:myName,score:R.score,classCode:PROF.classCode}); }catch(e){}
+  var acc=R.answered?Math.round(R.correct/R.answered*100):0;
+  document.getElementById("view").innerHTML='<div style="max-width:520px;margin:0 auto;text-align:center;animation:fade .3s ease;">'+
+    '<div class="lab" style="color:var(--fire);">Time!</div>'+
+    '<h1 class="serif" style="font-size:34px;font-weight:600;color:var(--navy);margin:6px 0 4px;">'+(isPB?"New personal best! 🎉":"Blitz complete")+'</h1>'+
+    '<div style="color:var(--muted);font-size:14px;margin-bottom:22px;">'+(isPB?"Added to the leaderboard.":("Your best: "+prevBest))+'</div>'+
+    '<div style="display:flex;gap:12px;justify-content:center;margin-bottom:26px;flex-wrap:wrap;">'+
+      '<div class="card" style="padding:18px 24px;"><div style="font-weight:800;font-size:34px;color:var(--navy);line-height:1;">'+R.score+'</div><div class="lab" style="margin-top:4px;">Points</div></div>'+
+      '<div class="card" style="padding:18px 24px;"><div style="font-weight:800;font-size:34px;color:#059669;line-height:1;">'+R.correct+'</div><div class="lab" style="margin-top:4px;">Correct</div></div>'+
+      '<div class="card" style="padding:18px 24px;"><div style="font-weight:800;font-size:34px;color:var(--navy);line-height:1;">'+acc+'%</div><div class="lab" style="margin-top:4px;">Accuracy</div></div>'+
+    '</div>'+
+    '<div style="display:flex;gap:12px;justify-content:center;">'+
+      '<button class="btn btn-f" style="padding:13px 24px;font-size:15px;" onclick="startRapid()">Go again</button>'+
+      '<a class="btn btn-s" href="leaderboard.html" style="padding:13px 24px;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;">Leaderboard</a>'+
+      '<a class="btn btn-s" href="games.html" style="padding:13px 24px;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;">All games</a>'+
+    '</div></div>';
+}
+window.startRapid=startRapid;window.answer=answer;window.renderIntro=renderIntro;
+</script>
+</body>
+</html>

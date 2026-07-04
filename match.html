@@ -63,6 +63,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="sprint-auth.js"></script>
 <script src="sprint-game.js"></script>
+<script src="invites.js"></script>
 <script src="math-games.js"></script>
 <script>
 var GAMES=window.MATH_GAMES||[];
@@ -94,8 +95,36 @@ SprintAuth.gate().then(function(ctx){
   myName=PROF.nickname||PROF.name||ctx.user.email; CFG.p1=myName;
   document.getElementById("loading").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
+  // auto-accept an invite link:  match.html?join=ROOM&topic=..&rounds=..
+  var qp=new URLSearchParams(location.search);
+  if(qp.get("join")){
+    CFG.mode="online"; CFG.topic=qp.get("topic")||"mixed"; CFG.rounds=+qp.get("rounds")||10;
+    try{ SprintInvites.clear(myEk, qp.get("join").toUpperCase()); }catch(e){}
+    startOnline(qp.get("join").toUpperCase());
+    return;
+  }
+  watchInvites();
   renderSetup();
 });
+
+/* incoming challenge banner */
+var inviteUnsub=null;
+function watchInvites(){
+  if(inviteUnsub)inviteUnsub();
+  inviteUnsub=SprintInvites.watch(myEk,function(list){
+    var bar=document.getElementById("inviteBar");
+    if(!list.length){ if(bar)bar.remove(); return; }
+    var inv=list[0];
+    if(!bar){ bar=document.createElement("div"); bar.id="inviteBar"; document.body.appendChild(bar); }
+    bar.style.cssText="position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100;background:var(--navy);border:1.5px solid var(--teal);border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.3);padding:14px 18px;display:flex;align-items:center;gap:14px;max-width:92vw;animation:fade .3s ease;";
+    bar.innerHTML='<div style="width:34px;height:34px;border-radius:10px;background:'+avColor(inv.fromName)+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;">'+esc(initials(inv.fromName))+'</div>'+
+      '<div style="color:#fff;font-size:13.5px;"><b>'+esc(inv.fromName)+'</b> challenged you<div style="color:#8FA6C4;font-size:12px;">Formula Match · '+esc(inv.rounds)+' rounds</div></div>'+
+      '<button class="btn btn-b" style="padding:9px 16px;font-size:13px;" onclick="acceptInvite(\''+inv.room+'\',\''+esc(inv.topic)+'\','+(+inv.rounds)+')">Accept</button>'+
+      '<button class="btn btn-s" style="padding:9px 12px;font-size:13px;" onclick="dismissInvite(\''+inv.room+'\')">Later</button>';
+  },4000);
+}
+function acceptInvite(room,topic,rounds){ CFG.mode="online"; CFG.topic=topic||"mixed"; CFG.rounds=rounds||10; try{SprintInvites.clear(myEk,room);}catch(e){} var b=document.getElementById("inviteBar"); if(b)b.remove(); startOnline(room); }
+function dismissInvite(room){ try{SprintInvites.clear(myEk,room);}catch(e){} var b=document.getElementById("inviteBar"); if(b)b.remove(); }
 
 /* ================= SETUP ================= */
 function renderSetup(){
@@ -130,14 +159,44 @@ function renderSetup(){
 function setMode(m){CFG.mode=m;document.querySelectorAll("#modeSeg button").forEach(function(b){b.classList.toggle("on",b.dataset.m===m);});
   var ex=document.getElementById("modeExtra");
   if(m==="pass"){ex.innerHTML='<div class="field"><label class="flab">Player 1 (you)</label><input class="inp" id="p1" value="'+esc(CFG.p1)+'" maxlength="16"></div><div class="field"><label class="flab">Player 2</label><input class="inp" id="p2" value="'+esc(CFG.p2)+'" placeholder="e.g. your student" maxlength="16"></div>';}
-  else if(m==="online"){ex.innerHTML='<div class="field"><div class="seg"><button class="on" id="obCreate" onclick="setOnline(\'create\')">Create room</button><button id="obJoin" onclick="setOnline(\'join\')">Join room</button></div></div><div id="onlineBox"></div>';setOnline("create");}
+  else if(m==="online"){ex.innerHTML='<div class="field"><div class="seg"><button class="on" id="obPick" onclick="setOnline(\'pick\')">Pick opponent</button><button id="obCreate" onclick="setOnline(\'create\')">Room code</button><button id="obJoin" onclick="setOnline(\'join\')">Join</button></div></div><div id="onlineBox"></div>';setOnline("pick");}
   else{ex.innerHTML='<div style="background:var(--off);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);margin-bottom:14px;">🤖 The computer will answer when it\'s your turn to ask. Great for solo practice.</div>';}
 }
-var ONLINE="create";
-function setOnline(x){ONLINE=x;document.getElementById("obCreate").classList.toggle("on",x==="create");document.getElementById("obJoin").classList.toggle("on",x==="join");
+var ONLINE="pick";
+function setOnline(x){ONLINE=x;
   var b=document.getElementById("onlineBox");
+  ["obPick","obCreate","obJoin"].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.toggle("on",id==="ob"+x.charAt(0).toUpperCase()+x.slice(1));});
   if(x==="create"){b.innerHTML='<div style="background:var(--off);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);margin-bottom:14px;">A room code will be generated. Share it with your opponent so they can join and race the same deck.</div>';}
-  else{b.innerHTML='<div class="field"><label class="flab">Room code</label><input class="inp" id="joinCode" placeholder="e.g. K7P2QM" maxlength="6" style="text-transform:uppercase;letter-spacing:2px;font-weight:700;"></div>';}
+  else if(x==="join"){b.innerHTML='<div class="field"><label class="flab">Room code</label><input class="inp" id="joinCode" placeholder="e.g. K7P2QM" maxlength="6" style="text-transform:uppercase;letter-spacing:2px;font-weight:700;"></div>';}
+  else{ renderRoster(); }
+}
+async function renderRoster(){
+  var b=document.getElementById("onlineBox");
+  b.innerHTML='<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px;">Loading members…</div>';
+  var roster=[], online={};
+  try{
+    roster = PROF.classCode ? await SprintGame.classLeaderboard(PROF.classCode,50) : await SprintGame.globalLeaderboard(50);
+    var live = await SprintGame.roomPlayers("open"); var now=Date.now();
+    live.concat(await SprintGame.roomPlayers("match_"+(CFG.lastRoom||"none"))).forEach(function(p){ if(now-(p.updatedAt||0)<120000) online[p.emailKey]=true; });
+  }catch(e){}
+  roster=roster.filter(function(p){return p.emailKey!==myEk;});
+  if(!roster.length){ b.innerHTML='<div style="background:var(--off);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;color:var(--muted);margin-bottom:14px;">No other members yet'+(PROF.classCode?" in your class":"")+'. Use “Room code” to create a room and share the code.</div>'; return; }
+  b.innerHTML='<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Pick who to challenge'+(PROF.classCode?(' · class '+esc(PROF.classCode)):'')+'. They get an invite when they open the games.</div>'+
+    '<div style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">'+
+    roster.map(function(p){
+      var on=online[p.emailKey];
+      return '<div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border:1.5px solid var(--line);border-radius:11px;">'+
+        '<div style="position:relative;"><div style="width:34px;height:34px;border-radius:10px;background:'+avColor(p.name)+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;">'+esc(initials(p.name))+'</div>'+(on?'<span style="position:absolute;bottom:-2px;right:-2px;width:11px;height:11px;border-radius:50%;background:#10B981;border:2px solid #fff;"></span>':'')+'</div>'+
+        '<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(p.name)+'</div>'+
+          '<div style="font-size:11.5px;color:'+(on?"#059669":"var(--muted)")+';font-weight:600;">'+(on?"● online now":"offline · will get invite")+'</div></div>'+
+        '<button class="btn btn-p" style="padding:8px 16px;font-size:13px;" onclick="challenge(\''+p.emailKey+'\',\''+esc((p.name||"").replace(/'/g,""))+'\')">Challenge</button></div>';
+    }).join("")+'</div>';
+}
+async function challenge(toEk,toName){
+  CFG.topic=document.getElementById("topicSel").value;
+  var room=code6(); CFG.lastRoom=room;
+  try{ await SprintInvites.send({toEk:toEk,fromName:myName,fromEk:myEk,room:room,topic:CFG.topic,rounds:CFG.rounds}); }catch(e){}
+  startOnline(room, toName);
 }
 function setRounds(r){CFG.rounds=r;document.querySelectorAll("#roundSeg button").forEach(function(b){b.classList.toggle("on",+b.dataset.r===r);});}
 function togglePen(){CFG.penalty=!CFG.penalty;paintPen();}
@@ -278,6 +337,8 @@ function resolveRound(card,pick){
 function finishMatch(){
   clearInterval(roundTimer); stopSub();
   var a=M.scores[0],b=M.scores[1];
+  // credit the logged-in account (player 1) with their match score on the shared leaderboard
+  try{ SprintGame.bumpLeaderboard({email:PROF.email,name:myName,score:M.scores[0],classCode:PROF.classCode}); }catch(e){}
   var iAm = (M.mode==="cpu"||M.mode==="online")?0:-1; // in pass&play no single "me"
   var win = a===b?-1:(a>b?0:1);
   // record best for the human vs computer to global? keep matches local; only sprint feeds board.
@@ -307,19 +368,25 @@ function finalCard(i,win){
 /* ================= ONLINE (race a friend, same seeded deck) ================= */
 function code6(){var c="ABCDEFGHJKMNPQRSTUVWXYZ23456789",s="";for(var i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
 async function beginOnline(){
+  if(ONLINE==="pick"){ alert("Pick an opponent from the list to challenge them — or switch to “Room code”."); return; }
   var room;
   if(ONLINE==="join"){ room=(document.getElementById("joinCode").value.trim().toUpperCase()); if(room.length<4){alert("Enter the room code from your opponent.");return;} }
   else { room=code6(); }
-  var roomId="match_"+room;
+  CFG.topic=document.getElementById("topicSel").value;
+  startOnline(room);
+}
+async function startOnline(room, oppNameHint){
+  if(inviteUnsub){inviteUnsub();inviteUnsub=null;}
+  var roomId="match_"+room; CFG.lastRoom=room;
   await SprintGame.joinRoom(roomId,PROF);
-  // seeded deck from room code so both players get identical questions
+  // seeded deck from room code + topic so both players get identical questions
   var rng=seedRng(room+"|"+CFG.topic);
   var deck=seededShuffle(pool(CFG.topic),rng).slice(0,CFG.rounds);
-  M={mode:"online",room:room,roomId:roomId,deck:deck,rounds:deck.length,round:0,myScore:0,answered:0,oppName:"Opponent",oppScore:0,oppAnswered:0,selected:null,locked:false,live:[]};
+  M={mode:"online",room:room,roomId:roomId,deck:deck,rounds:deck.length,round:0,myScore:0,answered:0,oppName:oppNameHint||"Opponent",oppScore:0,oppAnswered:0,selected:null,locked:false,live:[]};
   stopSub();
   unsub=SprintGame.subscribeRoom(roomId,function(players){
     var opp=players.filter(function(p){return p.emailKey!==myEk;}).sort(function(a,b){return (b.score||0)-(a.score||0);})[0];
-    if(opp){M.oppName=opp.name||"Opponent";M.oppScore=opp.score||0;M.oppAnswered=opp.answered||0;}
+    if(opp){M.oppName=opp.name||M.oppName;M.oppScore=opp.score||0;M.oppAnswered=opp.answered||0;}
     if(M&&M.mode==="online"&&M.phase!=="done") paintOnlineHUD();
   },1200);
   renderOnlineRound();
@@ -383,6 +450,7 @@ function onlineAnswer(i){
 }
 function finishOnline(){
   M.phase="done"; pushOnline(true);
+  try{ SprintGame.bumpLeaderboard({email:PROF.email,name:myName,score:M.myScore,classCode:PROF.classCode}); }catch(e){}
   var meWin=M.myScore>M.oppScore, tie=M.myScore===M.oppScore;
   document.getElementById("view").innerHTML='<div style="max-width:520px;margin:0 auto;text-align:center;animation:fade .3s ease;">'+
     '<div class="lab" style="color:var(--amber);">Match over</div>'+
@@ -397,7 +465,7 @@ function finishOnline(){
 
 function stopSub(){if(unsub){unsub();unsub=null;}}
 window.addEventListener("beforeunload",function(){stopSub();if(M&&M.mode==="online")SprintGame.leaveRoom(M.roomId,PROF.email);});
-window.setMode=setMode;window.setOnline=setOnline;window.setRounds=setRounds;window.togglePen=togglePen;window.beginMatch=beginMatch;window.askCard=askCard;window.respond=respond;window.onlineAnswer=onlineAnswer;window.renderSetup=renderSetup;
+window.setMode=setMode;window.setOnline=setOnline;window.setRounds=setRounds;window.togglePen=togglePen;window.beginMatch=beginMatch;window.askCard=askCard;window.respond=respond;window.onlineAnswer=onlineAnswer;window.renderSetup=renderSetup;window.challenge=challenge;window.acceptInvite=acceptInvite;window.dismissInvite=dismissInvite;
 </script>
 </body>
 </html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coach Dashboard · FreeStudy Hub</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+:root{--navy:#0B1F3A;--navy-mid:#1A3558;--blue:#1D4ED8;--teal:#2DD4BF;--teal-d:#0D9488;--ink:#1E293B;--muted:#64748B;--line:#E2E8F0;--bg:#F1F5F9;--off:#F7F9FC;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.topbar{height:58px;background:var(--navy);border-bottom:3px solid var(--teal);display:flex;align-items:center;justify-content:space-between;padding:0 22px;}
+.brandrow{display:flex;align-items:center;gap:11px;}
+.kick{font-weight:800;font-size:14px;letter-spacing:.5px;color:#fff;}
+.kick-sub{font-size:9px;letter-spacing:2px;color:var(--teal);text-transform:uppercase;}
+.nav a,.nav button{font:inherit;font-size:13px;font-weight:600;color:#B9C9DE;background:none;border:none;padding:7px 12px;border-radius:8px;cursor:pointer;text-decoration:none;}
+.nav a:hover{color:#fff;background:rgba(255,255,255,.08);}
+.so{border:1.5px solid rgba(255,255,255,.22)!important;color:#fff!important;}
+.container{max-width:1000px;margin:0 auto;padding:26px 22px 60px;}
+.center{min-height:50vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted);}
+.spinner{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--teal-d);border-radius:50%;animation:spin .7s linear infinite;}
+.hidden{display:none!important;}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(11,31,58,.04);}
+.serif{font-family:'Source Serif 4',serif;}
+.btn{font:inherit;font-weight:700;border:none;border-radius:10px;cursor:pointer;}
+.btn-p{background:linear-gradient(135deg,var(--teal-d),var(--blue));color:#fff;}
+.btn-s{background:var(--off);border:1.5px solid var(--line);color:var(--ink);}
+.inp{font:inherit;font-size:15px;padding:11px 14px;border:1.5px solid #CBD5E1;border-radius:10px;background:#fff;color:var(--ink);outline:none;}
+.inp:focus{border-color:var(--blue);}
+.lab{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);}
+.seg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:3px;}
+.seg button{font:inherit;font-size:13px;font-weight:600;padding:8px 16px;border:none;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;}
+.seg button.on{background:var(--navy);color:#fff;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:1.5px solid var(--line);}
+td{padding:12px;border-bottom:1px solid var(--line);font-size:14px;}
+tr:last-child td{border-bottom:none;}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><g id="leaf"><circle cx="19" cy="6" r="5.5" fill="#2DD4BF"/><path d="M12,14 Q19,10 26,14 L24,23 L14,23 Z" fill="#2DD4BF"/><path d="M7,21 Q13,17 19,21 L19,32 Q13,30 7,32 Z" fill="#2DD4BF"/><path d="M19,21 Q25,17 31,21 L31,32 Q25,30 19,32 Z" fill="#2DD4BF"/></g></defs></svg>
+
+<div class="topbar">
+  <div class="brandrow">
+    <svg viewBox="0 0 38 44" width="24" height="28"><use href="#leaf"/></svg>
+    <div><div class="kick">FreeStudy Hub</div><div class="kick-sub">Coach Dashboard</div></div>
+  </div>
+  <div class="nav"><a href="games.html">← Games</a><a href="leaderboard.html">Leaderboard</a><button class="so" onclick="SprintAuth.signOut().then(function(){location.href='index.html';})">Sign out</button></div>
+</div>
+
+<div id="loading" class="center"><div class="spinner"></div></div>
+<div id="app" class="hidden"><div class="container" id="view"></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="sprint-auth.js"></script>
+<script src="sprint-game.js"></script>
+<script>
+var PROF=null, SCOPE="class", CODE="", ROWS=[];
+var CODE_KEY="coach_class_code";
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function initials(n){var p=String(n||"?").trim().split(/\s+/);return((p[0]||"")[0]||"")+((p[1]||"")[0]||"");}
+function avColor(s){var h=0;s=String(s||"");for(var i=0;i<s.length;i++)h=s.charCodeAt(i)+((h<<5)-h);var c=["#0D9488","#1D4ED8","#7C3AED","#D97706","#DB2777","#0891B2"];return c[Math.abs(h)%c.length];}
+function ago(t){ if(!t)return "—"; var s=Math.floor((Date.now()-t)/1000);
+  if(s<60)return "just now"; if(s<3600)return Math.floor(s/60)+"m ago"; if(s<86400)return Math.floor(s/3600)+"h ago";
+  var d=Math.floor(s/86400); if(d<30)return d+"d ago"; return Math.floor(d/30)+"mo ago"; }
+
+SprintAuth.gate().then(function(ctx){
+  PROF=ctx.profile||{};
+  CODE=(function(){try{return localStorage.getItem(CODE_KEY)||"";}catch(e){return "";}})()||PROF.classCode||"";
+  document.getElementById("loading").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  render();
+});
+
+function setScope(s){SCOPE=s;load();}
+function applyCode(){ CODE=(document.getElementById("codeInput").value.trim().toUpperCase()); try{localStorage.setItem(CODE_KEY,CODE);}catch(e){} load(); }
+
+function render(){
+  document.getElementById("view").innerHTML='<div style="animation:fade .3s ease;">'+
+    '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px;">'+
+      '<div><div class="lab" style="color:var(--teal-d);">Instructor view</div><h1 class="serif" style="font-size:30px;font-weight:600;color:var(--navy);margin-top:4px;">Student progress</h1></div>'+
+      '<div class="seg"><button id="scClass" class="'+(SCOPE==="class"?"on":"")+'" onclick="setScope(\'class\')">By class code</button><button id="scGlobal" class="'+(SCOPE==="global"?"on":"")+'" onclick="setScope(\'global\')">All members</button></div>'+
+    '</div>'+
+    (SCOPE==="class"?('<div class="card" style="padding:14px 16px;margin-bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">'+
+      '<label class="lab" style="margin-right:2px;">Class code</label>'+
+      '<input class="inp" id="codeInput" value="'+esc(CODE)+'" placeholder="e.g. K7P2QM" maxlength="8" style="text-transform:uppercase;letter-spacing:2px;font-weight:700;width:160px;">'+
+      '<button class="btn btn-p" style="padding:10px 18px;" onclick="applyCode()">Load class</button>'+
+      '<span style="font-size:12px;color:var(--muted);">Share this code with students so they enter it at sign-up.</span></div>'):'')+
+    '<div id="body"></div></div>';
+  load();
+}
+
+async function load(){
+  var body=document.getElementById("body");
+  if(SCOPE==="class" && !CODE){ body.innerHTML='<div class="card" style="padding:40px;text-align:center;color:var(--muted);">Enter a class code above to see that class\'s students.</div>'; return; }
+  body.innerHTML='<div class="center" style="min-height:200px;"><div class="spinner"></div></div>';
+  try{
+    ROWS = SCOPE==="class" ? await SprintGame.classLeaderboard(CODE,500) : await SprintGame.globalLeaderboard(500);
+  }catch(e){ ROWS=[]; }
+  paint();
+}
+
+function paint(){
+  var body=document.getElementById("body");
+  if(!ROWS.length){ body.innerHTML='<div class="card" style="padding:40px;text-align:center;color:var(--muted);">No student activity yet'+(SCOPE==="class"?(' for class '+esc(CODE)):'')+'.</div>'; return; }
+  var now=Date.now(), weekAgo=now-7*86400000;
+  var total=ROWS.length;
+  var active=ROWS.filter(function(r){return (r.updatedAt||0)>weekAgo;}).length;
+  var totalPlays=ROWS.reduce(function(a,r){return a+(r.plays||0);},0);
+  var avg=Math.round(ROWS.reduce(function(a,r){return a+(r.bestScore||0);},0)/total);
+  var top=ROWS.slice().sort(function(a,b){return (b.bestScore||0)-(a.bestScore||0);})[0];
+
+  var stats='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px;">'+
+    stat(total,"Students")+stat(active,"Active this week")+stat(totalPlays,"Total games played")+stat(avg,"Avg best score")+
+    '</div>';
+
+  var sorted=ROWS.slice().sort(function(a,b){return (b.bestScore||0)-(a.bestScore||0);});
+  var rows=sorted.map(function(r,i){
+    var stale=(r.updatedAt||0)<weekAgo;
+    return '<tr>'+
+      '<td style="width:34px;color:var(--muted);font-weight:700;">'+(i+1)+'</td>'+
+      '<td><div style="display:flex;align-items:center;gap:10px;"><div style="width:32px;height:32px;border-radius:9px;background:'+avColor(r.name)+';display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;">'+esc(initials(r.name))+'</div>'+
+        '<div><div style="font-weight:700;color:var(--navy);">'+esc(r.name||"—")+'</div><div style="font-size:11.5px;color:var(--muted);">'+esc(r.email||"")+'</div></div></div></td>'+
+      '<td><span style="font-size:12px;font-weight:700;color:var(--teal-d);background:#CCFBF1;padding:3px 10px;border-radius:20px;">'+esc(r.title||SprintGame.titleForScore(r.bestScore||0))+'</span></td>'+
+      '<td style="font-weight:800;color:var(--navy);">'+(r.bestScore||0)+'</td>'+
+      '<td style="color:var(--muted);">'+(r.plays||0)+'</td>'+
+      '<td style="color:'+(stale?"#B45309":"var(--muted)")+';">'+ago(r.updatedAt)+(stale?' ⚠':'')+'</td>'+
+    '</tr>';
+  }).join("");
+
+  body.innerHTML=stats+
+    '<div class="card" style="overflow:hidden;">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1.5px solid var(--line);">'+
+        '<div style="font-weight:800;color:var(--navy);">'+(SCOPE==="class"?("Class "+esc(CODE)):"All members")+' · '+total+' student'+(total===1?"":"s")+'</div>'+
+        '<div style="display:flex;gap:8px;"><button class="btn btn-s" style="padding:8px 14px;font-size:13px;" onclick="load()">↻ Refresh</button><button class="btn btn-s" style="padding:8px 14px;font-size:13px;" onclick="exportCSV()">⬇ Export CSV</button></div></div>'+
+      '<div style="overflow-x:auto;"><table><thead><tr><th>#</th><th>Student</th><th>Tier</th><th>Best</th><th>Games</th><th>Last active</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+    '</div>'+
+    '<div style="font-size:12px;color:var(--muted);margin-top:14px;line-height:1.6;">“Best” is each student\'s highest score across all games. “Last active” flags students inactive for 7+ days (⚠). Data updates as students play.</div>';
+}
+function stat(v,l){return '<div class="card" style="padding:16px 18px;"><div style="font-weight:800;font-size:28px;color:var(--navy);line-height:1;">'+v+'</div><div class="lab" style="margin-top:5px;">'+l+'</div></div>';}
+
+function exportCSV(){
+  var sorted=ROWS.slice().sort(function(a,b){return (b.bestScore||0)-(a.bestScore||0);});
+  var head=["Rank","Name","Email","Tier","BestScore","GamesPlayed","LastActive"];
+  var lines=[head.join(",")].concat(sorted.map(function(r,i){
+    return [i+1,'"'+(r.name||"").replace(/"/g,'""')+'"',r.email||"",r.title||SprintGame.titleForScore(r.bestScore||0),r.bestScore||0,r.plays||0,r.updatedAt?new Date(r.updatedAt).toISOString().slice(0,10):""].join(",");
+  }));
+  var blob=new Blob([lines.join("\n")],{type:"text/csv"});
+  var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="freestudyhub-"+(SCOPE==="class"?CODE:"all")+"-progress.csv"; a.click();
+}
+window.setScope=setScope;window.applyCode=applyCode;window.load=load;window.exportCSV=exportCSV;
+</script>
+</body>
+</html>

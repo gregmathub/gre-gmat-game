@@ -50,6 +50,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
   </div>
   <div class="nav">
     <a href="leaderboard.html">Leaderboard</a>
+    <a href="coach.html">Coach</a>
     <span class="who" id="who"></span>
     <button class="so" onclick="SprintAuth.signOut().then(function(){location.href='index.html';})">Sign out</button>
   </div>
@@ -60,7 +61,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 <div id="app" class="hidden">
   <div class="wrap">
     <h1 class="hi" id="hi">Choose your game</h1>
-    <p class="lead">Three ways to sharpen your GMAT / GRE math — race the clock, drill one topic, or duel an opponent.</p>
+    <p class="lead">Four ways to sharpen your GMAT / GRE math — race the clock, drill one topic, duel an opponent, or blitz for 60 seconds. Every game counts toward the leaderboard.</p>
     <div class="grid">
       <a class="gcard" href="game.html">
         <div class="gicon" style="background:linear-gradient(135deg,#0D9488,#1D4ED8);">⚡</div>
@@ -83,6 +84,13 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
         <div class="gmeta">Ask-and-answer duel. Play the computer, sit beside a student (pass &amp; play), or challenge a friend by code.</div>
         <span class="ggo">Start a duel →</span>
       </a>
+      <a class="gcard" href="rapid-fire.html">
+        <div class="gicon" style="background:linear-gradient(135deg,#EA580C,#DB2777);">🔥</div>
+        <span class="gtag" style="background:#FFEDD5;color:#C2410C;">Blitz · ranked</span>
+        <div class="gname">Rapid Fire</div>
+        <div class="gmeta">60-second high-yield blitz across every topic — including geometry. Keep your streak alive and rack up points fast.</div>
+        <span class="ggo">Start the blitz →</span>
+      </a>
     </div>
   </div>
   <footer class="leaffoot">
@@ -100,6 +108,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="sprint-auth.js"></script>
+<script src="invites.js"></script>
 <script>
 SprintAuth.gate().then(function(ctx){
   var p=ctx.profile||{};
@@ -108,6 +117,20 @@ SprintAuth.gate().then(function(ctx){
   document.getElementById("hi").textContent="Welcome, "+String(nm).split(" ")[0];
   document.getElementById("loading").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
+  var myEk=SprintInvites.ek(p.email||ctx.user.email);
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function initials(n){var q=String(n||"?").trim().split(/\s+/);return((q[0]||"")[0]||"")+((q[1]||"")[0]||"");}
+  SprintInvites.watch(myEk,function(list){
+    var bar=document.getElementById("inviteBar");
+    if(!list.length){ if(bar)bar.remove(); return; }
+    var inv=list[0];
+    if(!bar){ bar=document.createElement("div"); bar.id="inviteBar"; document.body.appendChild(bar); }
+    bar.style.cssText="position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100;background:#0B1F3A;border:1.5px solid #2DD4BF;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.3);padding:14px 18px;display:flex;align-items:center;gap:14px;max-width:92vw;";
+    bar.innerHTML='<div style="width:34px;height:34px;border-radius:10px;background:#1D4ED8;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;">'+esc(initials(inv.fromName))+'</div>'+
+      '<div style="color:#fff;font-size:13.5px;"><b>'+esc(inv.fromName)+'</b> challenged you to Formula Match<div style="color:#8FA6C4;font-size:12px;">'+esc(inv.rounds)+' rounds</div></div>'+
+      '<a href="match.html?join='+encodeURIComponent(inv.room)+'&topic='+encodeURIComponent(inv.topic)+'&rounds='+encodeURIComponent(inv.rounds)+'" style="background:linear-gradient(135deg,#0D9488,#1D4ED8);color:#fff;font-weight:700;font-size:13px;padding:9px 16px;border-radius:10px;text-decoration:none;">Accept</a>'+
+      '<button onclick="SprintInvites.clear(\''+myEk+'\',\''+inv.room+'\');this.parentNode.remove();" style="background:#F7F9FC;border:1.5px solid #E2E8F0;color:#1E293B;font-weight:700;font-size:13px;padding:9px 12px;border-radius:10px;cursor:pointer;">Later</button>';
+  },4000);
 });
 </script>
 </body>

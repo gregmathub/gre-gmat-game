@@ -327,6 +327,59 @@ window.MATH_GAMES = [
           { stem: "Sum of first 5 terms: 2,4,6,8,10?", options: ["30","25","40","20"], answer: 0 }
         ] }
     ]
+  },
+
+  /* ============ GAME 9 — GEOMETRY & SOLIDS (high-yield) ============ */
+  {
+    id: "geometry", name: "Geometry & Solids", icon: "△",
+    blurb: "Areas, the Pythagorean theorem, special triangles, circles, angles, and volume.",
+    formulas: [
+      { formula: "triangle area = ½ × base × height", concept: "Area of a triangle",
+        questions: [
+          { stem: "Triangle with base 10 and height 6. Area?", options: ["30","60","16","80"], answer: 0 },
+          { stem: "Triangle with base 8 and height 5. Area?", options: ["20","40","13","26"], answer: 0 }
+        ] },
+      { formula: "a² + b² = c² (right triangle)", concept: "Pythagorean theorem",
+        questions: [
+          { stem: "Right triangle with legs 6 and 8. Hypotenuse?", options: ["10","14","12","48"], answer: 0 },
+          { stem: "Right triangle with legs 5 and 12. Hypotenuse?", options: ["13","17","60","7"], answer: 0 }
+        ] },
+      { formula: "45-45-90 triangle: sides 1 : 1 : √2", concept: "Isosceles right triangle",
+        questions: [
+          { stem: "Isosceles right triangle, legs = 5. Hypotenuse?", options: ["5√2","10","5","25"], answer: 0 },
+          { stem: "Isosceles right triangle, legs = 7. Hypotenuse?", options: ["7√2","14","7","49"], answer: 0 }
+        ] },
+      { formula: "30-60-90 triangle: sides 1 : √3 : 2", concept: "30-60-90 triangle",
+        questions: [
+          { stem: "30-60-90 triangle, short side = 4. Hypotenuse?", options: ["8","4√3","12","16"], answer: 0 },
+          { stem: "30-60-90 triangle, short side = 6. Longer leg?", options: ["6√3","12","3√3","18"], answer: 0 }
+        ] },
+      { formula: "circle: A = πr² , C = 2πr", concept: "Area & circumference",
+        questions: [
+          { stem: "Circle with radius 5. Area?", options: ["25π","10π","5π","100π"], answer: 0 },
+          { stem: "Circle with radius 7. Circumference?", options: ["14π","49π","7π","28π"], answer: 0 }
+        ] },
+      { formula: "rectangle: A = l × w , P = 2(l + w)", concept: "Rectangle area & perimeter",
+        questions: [
+          { stem: "Rectangle 12 by 5. Area?", options: ["60","34","17","120"], answer: 0 },
+          { stem: "Rectangle 9 by 4. Perimeter?", options: ["26","36","13","72"], answer: 0 }
+        ] },
+      { formula: "sum of interior angles = (n − 2) × 180°", concept: "Polygon angle sum",
+        questions: [
+          { stem: "Sum of interior angles of a pentagon (5 sides)?", options: ["540°","360°","720°","180°"], answer: 0 },
+          { stem: "Sum of interior angles of a hexagon (6 sides)?", options: ["720°","540°","900°","360°"], answer: 0 }
+        ] },
+      { formula: "box volume = length × width × height", concept: "Volume of a rectangular solid",
+        questions: [
+          { stem: "Box 2 × 3 × 4. Volume?", options: ["24","9","20","12"], answer: 0 },
+          { stem: "Box 5 × 5 × 2. Volume?", options: ["50","20","12","25"], answer: 0 }
+        ] },
+      { formula: "cylinder volume = πr²h", concept: "Volume of a cylinder",
+        questions: [
+          { stem: "Cylinder radius 3, height 5. Volume?", options: ["45π","15π","30π","225π"], answer: 0 },
+          { stem: "Cylinder radius 2, height 10. Volume?", options: ["40π","20π","80π","100π"], answer: 0 }
+        ] }
+    ]
   }
 
 ];

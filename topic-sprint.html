@@ -56,6 +56,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="sprint-auth.js"></script>
+<script src="sprint-game.js"></script>
 <script src="math-games.js"></script>
 <script>
 var GAMES=window.MATH_GAMES||[];
@@ -176,6 +177,7 @@ function finish(){
   clearInterval(timer);
   var prevBest=getBest(S.gid), isPB=S.score>prevBest;
   if(isPB) setBest(S.gid,S.score);
+  try{ SprintGame.bumpLeaderboard({email:PROF.email,name:(PROF.nickname||PROF.name||PROF.email),score:S.score,classCode:PROF.classCode}); }catch(e){}
   var pct=Math.round(S.correct/S.total*100);
   document.getElementById("view").innerHTML='<div style="max-width:560px;margin:0 auto;text-align:center;animation:fade .3s ease;">'+
     '<div class="lab" style="color:#7C3AED;">'+S.icon+' '+esc(S.name)+'</div>'+
