@@ -108,7 +108,7 @@ window.MATH_GAMES = [
     formulas: [
       { formula: "odd × odd = odd; even × anything = even", concept: "Even/odd rules",
         questions: [
-          { stem: "Which is always even?", options: ["odd × odd","odd + even","even × odd","odd + odd"], answer: 2 },
+          { stem: "Which is always even?", options: ["odd × odd","odd + even","even × odd","3 × odd"], answer: 2 },
           { stem: "odd + odd = ?", options: ["odd","even","could be either","zero"], answer: 1 }
         ] },
       { formula: "# factors = product of (each exponent + 1)", concept: "Counting factors",
