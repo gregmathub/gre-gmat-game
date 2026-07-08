@@ -9,6 +9,7 @@ Upload ALL these web files to your GitHub repo (keep them together in one folder
 - topic-sprint.html   — Topic Sprint: pick 1 of 9 topics, race your best
 - match.html          — Formula Match: WhoT-style duel (Computer / Pass & Play / Online code)
 - rapid-fire.html     — Rapid Fire: 60-second high-yield blitz across all topics
+- math-trainer.html   — GRE Math Trainer: 12-game study+test course (standalone, no login)
 - coach.html          — Coach Dashboard: monitor student progress (instructor)
 - leaderboard.html    — global + class boards
 - sprint-auth.js      — auth + your Firebase config (already set)
